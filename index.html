@@ -1,1140 +1,1129 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gemini – גישה ישירה ל-AI</title>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&family=Google+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
+<title>Chronicle — RPG Command Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RTR22TQD0C"></script>
+<script>
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js',new Date());
+  gtag('config','G-RTR22TQD0C');
+</script>
+
 <style>
-  :root {
-    --bg-primary: #1e1f20;
-    --bg-secondary: #131314;
-    --bg-sidebar: #1a1b1c;
-    --bg-hover: #2a2b2c;
-    --bg-input: #1e1f20;
-    --bg-message-ai: #1e2a3a;
-    --text-primary: #e3e3e3;
-    --text-secondary: #9aa0a6;
-    --text-muted: #6e7072;
-    --accent-blue: #8ab4f8;
-    --accent-purple: #c084fc;
-    --accent-teal: #78d9ec;
-    --border: #3c3c3c;
-    --gemini-gradient: linear-gradient(135deg, #4285f4 0%, #9b72cb 40%, #d96570 70%, #d96570 100%);
-    --sidebar-width: 280px;
-    --input-radius: 28px;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Google Sans Text', 'Google Sans', Arial, sans-serif;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-  }
-
-  /* SIDEBAR */
-  .sidebar {
-    width: var(--sidebar-width);
-    background: var(--bg-sidebar);
-    display: flex;
-    flex-direction: column;
-    border-left: 1px solid var(--border);
-    transition: transform 0.3s ease;
-    flex-shrink: 0;
-  }
-
-  .sidebar-header {
-    padding: 16px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 64px;
-  }
-
-  .sidebar-logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-  }
-
-  .gemini-logo-text {
-    font-family: 'Google Sans', sans-serif;
-    font-size: 22px;
-    font-weight: 400;
-    background: var(--gemini-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .gemini-sparkle {
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-  }
-
-  .sidebar-menu-btn {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-  }
-  .sidebar-menu-btn:hover { background: var(--bg-hover); }
-
-  .new-chat-btn {
-    margin: 8px 12px;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    padding: 10px 16px;
-    border-radius: 24px;
-    cursor: pointer;
-    font-family: 'Google Sans', sans-serif;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: background 0.2s;
-    text-align: right;
-  }
-  .new-chat-btn:hover { background: var(--bg-hover); }
-
-  .chat-history-section {
-    padding: 8px 4px;
-    flex: 1;
-    overflow-y: auto;
-  }
-
-  .history-label {
-    font-size: 12px;
-    color: var(--text-muted);
-    padding: 8px 16px 4px;
-    font-weight: 500;
-  }
-
-  .history-item {
-    padding: 8px 16px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--text-secondary);
-    transition: background 0.2s;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin: 1px 4px;
-  }
-  .history-item:hover { background: var(--bg-hover); color: var(--text-primary); }
-  .history-item.active { background: #2a3547; color: var(--accent-blue); }
-
-  .sidebar-bottom {
-    padding: 12px;
-    border-top: 1px solid var(--border);
-  }
-
-  .user-avatar-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: background 0.2s;
-    background: none;
-    border: none;
-    color: var(--text-primary);
-    width: 100%;
-    text-align: right;
-  }
-  .user-avatar-btn:hover { background: var(--bg-hover); }
-
-  .avatar-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--gemini-gradient);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 600;
-    color: white;
-    flex-shrink: 0;
-  }
-
-  .user-info { text-align: right; }
-  .user-name { font-size: 14px; font-weight: 500; }
-  .user-email { font-size: 12px; color: var(--text-muted); }
-
-  /* MAIN CONTENT */
-  .main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    background: var(--bg-primary);
-  }
-
-  /* TOP BAR */
-  .top-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    height: 64px;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-
-  .model-selector {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: none;
-    border: none;
-    color: var(--text-primary);
-    cursor: pointer;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-family: 'Google Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    transition: background 0.2s;
-  }
-  .model-selector:hover { background: var(--bg-hover); }
-
-  .top-bar-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .icon-btn {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    transition: background 0.2s;
-  }
-  .icon-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
-
-  /* CHAT AREA */
-  .chat-area {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .chat-area::-webkit-scrollbar { width: 6px; }
-  .chat-area::-webkit-scrollbar-track { background: transparent; }
-  .chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-  /* WELCOME SCREEN */
-  .welcome-screen {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    text-align: center;
-    gap: 24px;
-  }
-
-  .welcome-sparkle {
-    width: 64px;
-    height: 64px;
-    animation: sparkle-pulse 3s ease-in-out infinite;
-  }
-
-  @keyframes sparkle-pulse {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.05) rotate(5deg); }
-  }
-
-  .welcome-greeting {
-    font-family: 'Google Sans', sans-serif;
-    font-size: 40px;
-    font-weight: 400;
-    background: var(--gemini-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.2;
-  }
-
-  .welcome-subtitle {
-    font-size: 16px;
-    color: var(--text-secondary);
-    max-width: 500px;
-  }
-
-  .suggestion-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    max-width: 700px;
-  }
-
-  .chip {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    padding: 10px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .chip:hover { background: var(--bg-hover); border-color: #5a5a5a; }
-
-  /* MESSAGES */
-  .message-container {
-    max-width: 820px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
-
-  .message-row {
-    display: flex;
-    margin-bottom: 24px;
-    animation: fadeIn 0.3s ease;
-    gap: 12px;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .message-row.user-msg {
-    justify-content: flex-end;
-  }
-
-  .message-row.user-msg .msg-bubble {
-    background: #2a3547;
-    border-radius: 20px 20px 4px 20px;
-    padding: 12px 18px;
-    max-width: 70%;
-    font-size: 15px;
-    line-height: 1.5;
-  }
-
-  .msg-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 4px;
-  }
-
-  .gemini-msg-avatar {
-    background: transparent;
-  }
-
-  .ai-msg-content {
-    flex: 1;
-    max-width: calc(100% - 48px);
-  }
-
-  .ai-msg-text {
-    font-size: 15px;
-    line-height: 1.7;
-    color: var(--text-primary);
-  }
-
-  .ai-msg-text h1, .ai-msg-text h2, .ai-msg-text h3 {
-    font-family: 'Google Sans', sans-serif;
-    margin: 16px 0 8px;
-    color: var(--text-primary);
-  }
-  .ai-msg-text h1 { font-size: 22px; }
-  .ai-msg-text h2 { font-size: 18px; }
-  .ai-msg-text h3 { font-size: 16px; }
-
-  .ai-msg-text p { margin-bottom: 12px; }
-
-  .ai-msg-text ul, .ai-msg-text ol {
-    padding-right: 20px;
-    margin-bottom: 12px;
-  }
-
-  .ai-msg-text li { margin-bottom: 6px; }
-
-  .ai-msg-text strong { color: #c5c9d0; }
-
-  .ai-msg-text code {
-    background: #2d2d2d;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 13px;
-    color: var(--accent-teal);
-  }
-
-  .ai-msg-text pre {
-    background: #1a1a1a;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-    overflow-x: auto;
-    margin: 12px 0;
-  }
-  .ai-msg-text pre code {
-    background: none;
-    padding: 0;
-    color: #e3e3e3;
-  }
-
-  .msg-actions {
-    display: flex;
-    gap: 4px;
-    margin-top: 8px;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  .message-row:hover .msg-actions { opacity: 1; }
-
-  .msg-action-btn {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 8px;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: all 0.2s;
-  }
-  .msg-action-btn:hover { background: var(--bg-hover); color: var(--text-secondary); }
-
-  /* TYPING INDICATOR */
-  .typing-indicator {
-    display: flex;
-    gap: 4px;
-    padding: 12px 0;
-    align-items: center;
-  }
-  .typing-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--accent-blue);
-    border-radius: 50%;
-    animation: bounce 1.2s ease infinite;
-  }
-  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes bounce {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-    30% { transform: translateY(-6px); opacity: 1; }
-  }
-
-  /* INPUT AREA */
-  .input-area {
-    padding: 16px 20px 20px;
-    flex-shrink: 0;
-  }
-
-  .input-container {
-    max-width: 820px;
-    margin: 0 auto;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: var(--input-radius);
-    padding: 12px 16px;
-    transition: border-color 0.2s;
-  }
-  .input-container:focus-within { border-color: #5a6e8a; }
-
-  .input-top {
-    display: flex;
-    align-items: flex-end;
-    gap: 8px;
-  }
-
-  .text-input {
-    flex: 1;
-    background: none;
-    border: none;
-    outline: none;
-    color: var(--text-primary);
-    font-family: 'Google Sans Text', sans-serif;
-    font-size: 15px;
-    line-height: 1.5;
-    resize: none;
-    min-height: 24px;
-    max-height: 200px;
-    text-align: right;
-    direction: rtl;
-  }
-
-  .text-input::placeholder { color: var(--text-muted); }
-
-  .input-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 8px;
-  }
-
-  .input-left-actions {
-    display: flex;
-    gap: 4px;
-  }
-
-  .input-icon-btn {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    transition: all 0.2s;
-  }
-  .input-icon-btn:hover { background: var(--bg-hover); color: var(--text-secondary); }
-
-  .send-btn {
-    background: var(--accent-blue);
-    border: none;
-    color: #1a1a1a;
-    cursor: pointer;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    flex-shrink: 0;
-  }
-  .send-btn:hover { background: #a8c7fa; transform: scale(1.05); }
-  .send-btn:disabled { background: var(--bg-hover); color: var(--text-muted); cursor: not-allowed; transform: none; }
-
-  .input-disclaimer {
-    text-align: center;
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 10px;
-    max-width: 820px;
-    margin-inline: auto;
-  }
-  .input-disclaimer a { color: var(--text-muted); }
-
-  /* CANVAS / DOCUMENT VIEW */
-  .canvas-panel {
-    width: 480px;
-    background: #1a1b1c;
-    border-right: 1px solid var(--border);
-    display: none;
-    flex-direction: column;
-    flex-shrink: 0;
-  }
-  .canvas-panel.visible { display: flex; }
-
-  .canvas-header {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .canvas-title {
-    font-family: 'Google Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-  }
-
-  .canvas-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 24px;
-  }
-
-  /* FIREBASE STATUS */
-  .firebase-badge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--text-muted);
-    padding: 4px 10px;
-    background: var(--bg-secondary);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-  }
-
-  .firebase-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #4caf50;
-    animation: pulse-dot 2s ease infinite;
-  }
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 3px; }
-
-  /* MOBILE */
-  @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .canvas-panel { display: none !important; }
-  }
-
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 100px;
-    right: 50%;
-    transform: translateX(50%);
-    background: #3c4043;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    z-index: 1000;
-    pointer-events: none;
-  }
-  .toast.show { opacity: 1; }
+:root {
+  --bg:       #07090f;
+  --bg2:      #0c1019;
+  --surface:  #111827;
+  --surface2: #192035;
+  --border:   #1e2a42;
+  --border2:  #2a3a5a;
+  --gold:     #c9a84c;
+  --gold2:    #e8c56a;
+  --golddim:  #7a6030;
+  --ember:    #c94a1e;
+  --ember2:   #e85d26;
+  --green:    #3d9e6a;
+  --text:     #ddd5c4;
+  --text2:    #9a8f7e;
+  --text3:    #4a4336;
+  --chw:      210px;
+  --hdr:      50px;
+  --r:        6px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Crimson Text',serif;font-size:16px;overflow:hidden}
+
+/* ── Scrollbars ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ═══════════════ AUTH ═══════════════ */
+#auth-screen{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:var(--bg);z-index:1000;
+}
+#auth-screen::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 50% at 30% 70%,rgba(201,168,76,.09) 0%,transparent 100%),
+             radial-gradient(ellipse 40% 40% at 75% 20%,rgba(201,74,30,.07) 0%,transparent 100%);
+  pointer-events:none;
+}
+.auth-card{
+  position:relative;width:370px;
+  background:var(--surface);border:1px solid var(--border2);border-radius:10px;
+  padding:40px 34px;
+  box-shadow:0 24px 70px rgba(0,0,0,.85),0 0 0 1px rgba(201,168,76,.08) inset;
+}
+.auth-logo{text-align:center;margin-bottom:28px}
+.auth-logo h1{
+  font-family:'Cinzel Decorative',serif;font-size:26px;font-weight:700;
+  color:var(--gold);letter-spacing:5px;
+  text-shadow:0 0 24px rgba(201,168,76,.45),0 0 60px rgba(201,168,76,.15);
+}
+.auth-logo p{
+  font-family:'Cinzel',serif;font-size:10px;color:var(--text2);
+  letter-spacing:4px;text-transform:uppercase;margin-top:6px;
+}
+.auth-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:22px}
+.auth-tab{
+  flex:1;padding:8px;background:none;border:none;
+  color:var(--text2);font-family:'Cinzel',serif;font-size:12px;
+  cursor:pointer;transition:color .2s;
+  border-bottom:2px solid transparent;margin-bottom:-1px;letter-spacing:1px;
+}
+.auth-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:5px}
+.fg input,.fg select{
+  width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);
+  padding:9px 12px;color:var(--text);font-family:'Crimson Text',serif;font-size:16px;outline:none;
+  transition:border-color .2s;
+}
+.fg input:focus,.fg select:focus{border-color:var(--golddim)}
+.fg select option{background:var(--surface)}
+.btn-primary{
+  width:100%;padding:11px;
+  background:linear-gradient(135deg,#b8922e,#c9a84c);
+  border:none;border-radius:var(--r);color:#1a1200;
+  font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;transition:opacity .2s,transform .1s;margin-top:4px;
+}
+.btn-primary:hover{opacity:.88}
+.btn-primary:active{transform:scale(.99)}
+.auth-err{color:var(--ember2);font-size:14px;text-align:center;margin-top:10px;min-height:18px}
+
+/* ═══════════════ APP SHELL ═══════════════ */
+#app{display:none;flex-direction:column;height:100vh}
+#app.on{display:flex}
+
+/* ── Header ── */
+#hdr{
+  height:var(--hdr);background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 14px;gap:12px;flex-shrink:0;
+}
+.hlogo{
+  font-family:'Cinzel Decorative',serif;font-size:16px;font-weight:700;
+  color:var(--gold);letter-spacing:4px;
+  text-shadow:0 0 14px rgba(201,168,76,.35);white-space:nowrap;
+}
+.hsep{width:1px;height:22px;background:var(--border2)}
+.hsp{flex:1}
+.ubadge{
+  display:flex;align-items:center;gap:7px;padding:3px 10px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:20px;
+  font-family:'Cinzel',serif;font-size:11px;color:var(--text2);white-space:nowrap;
+}
+.udot{width:6px;height:6px;background:var(--green);border-radius:50%}
+.role-dm{color:var(--ember2);font-size:9px;letter-spacing:1px}
+.ibtn{
+  width:30px;height:30px;background:none;border:1px solid var(--border);
+  border-radius:var(--r);color:var(--text2);font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.ibtn:hover{background:var(--surface2);color:var(--text);border-color:var(--border2)}
+
+/* ── Body ── */
+#body{flex:1;display:flex;overflow:hidden}
+
+/* ═══════════════ CANVAS PANEL (LEFT) ═══════════════ */
+#cpanel{
+  width:50%;min-width:320px;display:flex;flex-direction:column;
+  border-right:1px solid var(--border);background:var(--bg);
+}
+.ptabs{
+  display:flex;background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 6px;flex-shrink:0;
+}
+.ptab{
+  padding:9px 14px;background:none;border:none;border-bottom:2px solid transparent;
+  color:var(--text2);font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;
+  cursor:pointer;transition:all .2s;margin-bottom:-1px;white-space:nowrap;
+}
+.ptab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.ptab:hover:not(.active){color:var(--text)}
+
+/* ── Canvas ── */
+#tab-map{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.ctbar{
+  display:flex;align-items:center;gap:3px;padding:5px 8px;flex-wrap:wrap;
+  background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.tbtn{
+  padding:3px 9px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:4px;color:var(--text2);font-size:12px;cursor:pointer;
+  transition:all .15s;display:flex;align-items:center;gap:3px;white-space:nowrap;
+}
+.tbtn.active{background:var(--surface2);border-color:var(--golddim);color:var(--gold)}
+.tbtn:hover:not(.active){background:var(--surface2);color:var(--text)}
+.tsep{width:1px;height:18px;background:var(--border);margin:0 2px;flex-shrink:0}
+#cpicker{
+  width:24px;height:24px;border:2px solid var(--border2);
+  border-radius:4px;cursor:pointer;padding:0;background:none;flex-shrink:0;
+}
+.ssz{
+  background:var(--bg2);border:1px solid var(--border);border-radius:4px;
+  color:var(--text);font-size:11px;padding:2px 5px;cursor:pointer;
+}
+#cwrap{flex:1;position:relative;overflow:hidden}
+#cwrap::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
+  background-image:
+    linear-gradient(rgba(30,42,66,.35) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(30,42,66,.35) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+#mc{flex:1;cursor:crosshair;display:block;background:#080b12}
+
+/* ── Vault ── */
+#tab-vault{flex:1;display:none;flex-direction:column;overflow:hidden}
+.vhdr{
+  padding:10px 14px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.vhdr h3{font-family:'Cinzel',serif;font-size:12px;color:var(--gold);letter-spacing:2px;direction:rtl}
+.vlist{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:7px}
+.vi{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:11px 13px;cursor:pointer;transition:all .2s;direction:rtl;
+}
+.vi:hover{border-color:var(--golddim);background:var(--surface2)}
+.vi-title{font-family:'Cinzel',serif;font-size:12px;color:var(--gold);margin-bottom:3px}
+.vi-meta{font-size:13px;color:var(--text2)}
+.vi-prev{font-size:14px;color:var(--text2);margin-top:5px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.vempty{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;color:var(--text3);direction:rtl;text-align:center;
+}
+.vempty .vi{font-size:38px;opacity:.25}
+.vempty p{font-size:15px}
+
+/* ── DM Board ── */
+#tab-dm{flex:1;display:none;overflow-y:auto;padding:14px;direction:rtl}
+.dmsec{margin-bottom:18px}
+.dmsec-t{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--text3);margin-bottom:9px;padding-bottom:5px;border-bottom:1px solid var(--border);
+}
+.dmbtn{
+  width:100%;padding:9px 12px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);color:var(--text);font-family:'Crimson Text',serif;font-size:16px;
+  cursor:pointer;text-align:right;display:flex;align-items:center;gap:9px;
+  transition:all .2s;margin-bottom:5px;
+}
+.dmbtn:hover{background:var(--surface2);border-color:var(--border2)}
+.dmbtn.g{border-color:rgba(201,168,76,.3);color:var(--gold)}
+.dmbtn.g:hover{background:rgba(201,168,76,.08)}
+.dmbtn.r{border-color:rgba(201,74,30,.3);color:var(--ember2)}
+.dmbtn.r:hover{background:rgba(201,74,30,.08)}
+
+/* ═══════════════ CHAT PANEL (RIGHT) ═══════════════ */
+#chat-area{flex:1;display:flex;overflow:hidden;min-width:0}
+
+/* Channels Sidebar */
+#chs{
+  width:var(--chw);background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;
+}
+.ss{padding:10px 6px 3px}
+.ss-t{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--text3);padding:0 7px;margin-bottom:3px;direction:rtl;
+}
+.chi{
+  display:flex;align-items:center;gap:7px;padding:6px 10px;
+  border-radius:var(--r);cursor:pointer;transition:all .15s;direction:rtl;
+  font-family:'Crimson Text',serif;font-size:16px;color:var(--text2);
+}
+.chi:hover{background:var(--bg2);color:var(--text)}
+.chi.active{background:var(--surface2);color:var(--text)}
+.chi .icon{font-size:13px;flex-shrink:0}
+.chi .cn{flex:1}
+.chi .badge{
+  background:var(--ember);color:#fff;font-size:10px;
+  font-family:'JetBrains Mono',monospace;padding:1px 5px;
+  border-radius:10px;min-width:16px;text-align:center;
+}
+.olst{margin-top:auto;padding:10px 7px;border-top:1px solid var(--border)}
+.ouser{
+  display:flex;align-items:center;gap:7px;padding:4px 7px;
+  font-size:14px;color:var(--text2);direction:rtl;
+}
+.odot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+
+/* Chat Main */
+#chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+#chat-hdr{
+  padding:0 14px;height:42px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;flex-shrink:0;direction:rtl;
+}
+#chat-hdr .cn2{font-family:'Cinzel',serif;font-size:13px;color:var(--text)}
+#chat-hdr .cd{font-size:13px;color:var(--text3)}
+.hacts{margin-right:auto;display:flex;gap:5px}
+
+/* Messages */
+#msgs{
+  flex:1;overflow-y:auto;padding:14px;
+  display:flex;flex-direction:column;gap:1px;
+}
+.msg{display:flex;flex-direction:column;align-items:flex-end;padding:2px 0;direction:rtl}
+.msg .mm{display:flex;align-items:baseline;gap:7px;margin-bottom:2px}
+.ma{font-family:'Cinzel',serif;font-size:12px;font-weight:600}
+.ma.dm{color:var(--ember2)}
+.ma.player{color:var(--gold)}
+.mt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3)}
+.mb{
+  max-width:82%;padding:7px 11px;border-radius:4px 0 4px 4px;
+  background:var(--surface);border:1px solid var(--border);
+  font-size:16px;line-height:1.5;word-break:break-word;
+}
+.msg.own .mb{background:var(--surface2);border-color:var(--border2)}
+.msg.sc .mb{font-style:italic;border-right:3px solid var(--golddim)}
+.sysmsg{
+  text-align:center;font-family:'Cinzel',serif;font-size:10px;
+  letter-spacing:1.5px;color:var(--text3);padding:7px 0;
+  display:flex;align-items:center;gap:8px;
+}
+.sysmsg::before,.sysmsg::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Input */
+#iarea{
+  padding:10px 14px;background:var(--surface);border-top:1px solid var(--border);
+  flex-shrink:0;direction:rtl;
+}
+.iacts{display:flex;gap:5px;margin-bottom:7px}
+.iabtn{
+  padding:3px 9px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:4px;color:var(--text2);font-family:'Cinzel',serif;font-size:10px;
+  letter-spacing:1px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:4px;
+}
+.iabtn:hover{background:var(--surface2);border-color:var(--golddim);color:var(--gold)}
+.irow{display:flex;gap:7px;align-items:flex-end}
+#minput{
+  flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);
+  padding:9px 12px;color:var(--text);font-family:'Crimson Text',serif;font-size:17px;
+  resize:none;outline:none;min-height:40px;max-height:110px;line-height:1.4;
+  direction:rtl;transition:border-color .2s;
+}
+#minput:focus{border-color:var(--golddim)}
+#minput::placeholder{color:var(--text3)}
+.sbtn{
+  width:40px;height:40px;background:linear-gradient(135deg,#b8922e,#c9a84c);
+  border:none;border-radius:var(--r);color:#1a1200;font-size:17px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:opacity .2s;
+}
+.sbtn:hover{opacity:.85}
+
+/* ═══════════════ MODALS ═══════════════ */
+.mo{
+  position:fixed;inset:0;background:rgba(0,0,0,.72);
+  display:none;align-items:center;justify-content:center;
+  z-index:500;backdrop-filter:blur(5px);
+}
+.mo.open{display:flex}
+.modal{
+  background:var(--surface);border:1px solid var(--border2);border-radius:9px;
+  padding:22px;width:580px;max-width:94vw;max-height:84vh;
+  display:flex;flex-direction:column;direction:rtl;
+  box-shadow:0 24px 70px rgba(0,0,0,.85);
+}
+.modal.wide{width:660px}
+.mhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.mtitle{font-family:'Cinzel',serif;font-size:14px;color:var(--gold);letter-spacing:2px}
+.mclose{background:none;border:none;color:var(--text2);font-size:19px;cursor:pointer;line-height:1}
+.mclose:hover{color:var(--text)}
+.mbody{flex:1;overflow-y:auto}
+.mfoot{display:flex;gap:7px;margin-top:14px;justify-content:flex-end}
+.btn-sec{
+  padding:7px 18px;background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--r);color:var(--text2);font-family:'Cinzel',serif;
+  font-size:11px;letter-spacing:1px;cursor:pointer;transition:all .15s;
+}
+.btn-sec:hover{background:var(--surface2);color:var(--text)}
+.btn-gold{
+  padding:7px 18px;background:linear-gradient(135deg,#b8922e,#c9a84c);
+  border:none;border-radius:var(--r);color:#1a1200;
+  font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:1px;
+  cursor:pointer;transition:opacity .2s;
+}
+.btn-gold:hover{opacity:.85}
+.chro-out{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+  padding:14px;font-size:16px;line-height:1.75;white-space:pre-wrap;
+  color:var(--text);direction:rtl;font-style:italic;
+  min-height:180px;max-height:380px;overflow-y:auto;
+}
+.chro-load{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:38px;color:var(--text2);font-family:'Cinzel',serif;
+  font-size:12px;letter-spacing:2px;
+}
+.spin{
+  width:18px;height:18px;border:2px solid var(--border2);
+  border-top-color:var(--gold);border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Settings */
+.stsec{margin-bottom:18px}
+.stsec h4{font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.stnote{font-size:13px;color:var(--text3);margin-top:5px}
+.stin{
+  width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);
+  padding:9px 12px;color:var(--text);font-size:15px;outline:none;
+  transition:border-color .2s;
+}
+.stin:focus{border-color:var(--golddim)}
+.stlabel{display:block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:5px;margin-top:12px}
+
+/* Toast */
+#toast{
+  position:fixed;bottom:20px;left:50%;
+  transform:translateX(-50%) translateY(16px);
+  background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);
+  padding:9px 18px;font-family:'Cinzel',serif;font-size:12px;letter-spacing:1px;
+  color:var(--text);opacity:0;transition:all .28s;pointer-events:none;z-index:999;white-space:nowrap;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Typing */
+.typing{display:flex;align-items:center;gap:5px;padding:3px 0;direction:rtl}
+.tdot{
+  width:5px;height:5px;background:var(--golddim);border-radius:50%;
+  animation:td 1.2s ease-in-out infinite;
+}
+.tdot:nth-child(2){animation-delay:.2s}
+.tdot:nth-child(3){animation-delay:.4s}
+@keyframes td{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+
+@media(max-width:700px){
+  #cpanel{display:none}
+  #chat-area{flex:1}
+}
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="sidebar-header">
-    <a class="sidebar-logo" href="#">
-      <svg class="gemini-sparkle" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="sparkle-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#4285f4"/>
-            <stop offset="40%" style="stop-color:#9b72cb"/>
-            <stop offset="100%" style="stop-color:#d96570"/>
-          </linearGradient>
-        </defs>
-        <path fill="url(#sparkle-grad)" d="M164.93 86.68c-13.56-5.84-25.42-13.84-35.6-24.01-10.17-10.17-18.18-22.04-24.01-35.6-2.23-5.19-4.04-10.54-5.42-16.02C99.45 9.26 97.85 8 96 8s-3.45 1.26-3.9 3.05c-1.38 5.48-3.18 10.81-5.42 16.02-5.84 13.56-13.84 25.43-24.01 35.6-10.17 10.16-22.04 18.17-35.6 24.01-5.19 2.23-10.54 4.04-16.02 5.42C9.26 92.55 8 94.15 8 96s1.26 3.45 3.05 3.9c5.48 1.38 10.81 3.18 16.02 5.42 13.56 5.84 25.42 13.84 35.6 24.01 10.17 10.17 18.18 22.04 24.01 35.6 2.24 5.2 4.04 10.54 5.42 16.02A4.03 4.03 0 0 0 96 184c1.85 0 3.45-1.26 3.9-3.05 1.38-5.48 3.18-10.81 5.42-16.02 5.84-13.56 13.84-25.42 24.01-35.6 10.17-10.17 22.04-18.18 35.6-24.01 5.2-2.24 10.54-4.04 16.02-5.42A4.03 4.03 0 0 0 184 96c0-1.85-1.26-3.45-3.05-3.9-5.48-1.38-10.81-3.18-16.02-5.42"/>
-      </svg>
-      <span class="gemini-logo-text">Gemini</span>
-    </a>
-    <button class="sidebar-menu-btn" onclick="toggleSidebar()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/>
-      </svg>
-    </button>
-  </div>
-
-  <button class="new-chat-btn" onclick="newChat()">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-    </svg>
-    שיחה חדשה
-  </button>
-
-  <div class="chat-history-section" id="chat-history">
-    <div class="history-label">היום</div>
-    <div class="history-item active" onclick="loadChat('rpg')">🎮 AI-Powered RPG Storytelling Hub</div>
-    <div class="history-item" onclick="loadChat('firebase')">🔥 הגדרת Firebase לפרויקט</div>
-    <div class="history-item" onclick="loadChat('canvas')">📄 Gemini Canvas - מסמך</div>
-    <div class="history-label">אתמול</div>
-    <div class="history-item">💻 React Component עם Hooks</div>
-    <div class="history-item">🤖 שאלות על Claude API</div>
-  </div>
-
-  <div class="sidebar-bottom">
-    <div class="firebase-badge" id="firebase-status">
-      <span class="firebase-dot"></span>
-      <span>Firebase: לא מחובר</span>
+<!-- ══════════════ AUTH ══════════════ -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <h1>CHRONICLE</h1>
+      <p>RPG Command Hub</p>
     </div>
-    <br>
-    <button class="user-avatar-btn">
-      <div class="avatar-circle" id="avatar-initials">?</div>
-      <div class="user-info">
-        <div class="user-name" id="user-name-display">התחבר</div>
-        <div class="user-email" id="user-email-display">לחץ להתחברות</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tl" onclick="authTab('login')">כניסה</button>
+      <button class="auth-tab" id="ts" onclick="authTab('signup')">הרשמה</button>
+    </div>
+    <div id="lf">
+      <div class="fg"><label>אימייל</label><input type="email" id="le" placeholder="your@email.com" dir="ltr"></div>
+      <div class="fg"><label>סיסמה</label><input type="password" id="lp" placeholder="••••••••" dir="ltr" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn-primary" onclick="doLogin()">כניסה לחדר המשחק</button>
+    </div>
+    <div id="sf" style="display:none">
+      <div class="fg"><label>שם מציג / דמות</label><input type="text" id="sn" placeholder="Thorin Oakenshield"></div>
+      <div class="fg"><label>אימייל</label><input type="email" id="se" placeholder="your@email.com" dir="ltr"></div>
+      <div class="fg"><label>סיסמה</label><input type="password" id="sp" placeholder="••••••••" dir="ltr"></div>
+      <div class="fg">
+        <label>תפקיד</label>
+        <select id="sr">
+          <option value="player">שחקן</option>
+          <option value="dm">מאסטר המשחק (DM)</option>
+        </select>
       </div>
-    </button>
+      <button class="btn-primary" onclick="doSignup()">הצטרפות לאגדה</button>
+    </div>
+    <div class="auth-err" id="aerr"></div>
   </div>
-</aside>
-
-<!-- CANVAS PANEL -->
-<div class="canvas-panel" id="canvas-panel">
-  <div class="canvas-header">
-    <span class="canvas-title">📄 Canvas</span>
-    <button class="icon-btn" onclick="toggleCanvas()">✕</button>
-  </div>
-  <div class="canvas-content" id="canvas-content"></div>
 </div>
 
-<!-- MAIN -->
-<main class="main-content">
-  <div class="top-bar">
-    <button class="model-selector" id="model-btn" onclick="toggleModelMenu()">
-      Gemini 2.0 Flash
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
-    </button>
-    <div class="top-bar-actions">
-      <button class="icon-btn" onclick="toggleCanvas()" title="Canvas">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="18" height="18" rx="2"/>
-          <path d="M9 3v18M15 3v18M3 9h18M3 15h18" opacity="0.5"/>
-        </svg>
-      </button>
-      <button class="icon-btn" title="שתף">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-          <path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/>
-        </svg>
-      </button>
+<!-- ══════════════ APP ══════════════ -->
+<div id="app">
+
+  <!-- Header -->
+  <div id="hdr">
+    <span class="hlogo">⚔ CHRONICLE</span>
+    <div class="hsep"></div>
+    <span style="font-family:'Cinzel',serif;font-size:9px;color:var(--text3);letter-spacing:3px">RPG COMMAND HUB</span>
+    <div class="hsp"></div>
+    <div class="ubadge">
+      <div class="udot"></div>
+      <span id="huname">—</span>
+      <span class="role-dm" id="hrole" style="display:none">DM</span>
     </div>
+    <button class="ibtn" title="הגדרות" onclick="openSettings()">⚙</button>
+    <button class="ibtn" title="יציאה" onclick="doLogout()" style="color:var(--ember2)">⏻</button>
   </div>
 
-  <div class="chat-area" id="chat-area">
-    <div class="welcome-screen" id="welcome-screen">
-      <svg class="welcome-sparkle" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
-        <path fill="url(#sparkle-grad)" d="M164.93 86.68c-13.56-5.84-25.42-13.84-35.6-24.01-10.17-10.17-18.18-22.04-24.01-35.6-2.23-5.19-4.04-10.54-5.42-16.02C99.45 9.26 97.85 8 96 8s-3.45 1.26-3.9 3.05c-1.38 5.48-3.18 10.81-5.42 16.02-5.84 13.56-13.84 25.43-24.01 35.6-10.17 10.16-22.04 18.17-35.6 24.01-5.19 2.23-10.54 4.04-16.02 5.42C9.26 92.55 8 94.15 8 96s1.26 3.45 3.05 3.9c5.48 1.38 10.81 3.18 16.02 5.42 13.56 5.84 25.42 13.84 35.6 24.01 10.17 10.17 18.18 22.04 24.01 35.6 2.24 5.2 4.04 10.54 5.42 16.02A4.03 4.03 0 0 0 96 184c1.85 0 3.45-1.26 3.9-3.05 1.38-5.48 3.18-10.81 5.42-16.02 5.84-13.56 13.84-25.42 24.01-35.6 10.17-10.17 22.04-18.18 35.6-24.01 5.2-2.24 10.54-4.04 16.02-5.42A4.03 4.03 0 0 0 184 96c0-1.85-1.26-3.45-3.05-3.9-5.48-1.38-10.81-3.18-16.02-5.42"/>
-      </svg>
-      <h1 class="welcome-greeting">שלום, מה אפשר לעשות בשבילך?</h1>
-      <p class="welcome-subtitle">אני Gemini, AI חכם מבית Google. אשמח לעזור עם כתיבה, ניתוח, קידוד ועוד.</p>
-      <div class="suggestion-chips">
-        <button class="chip" onclick="sendSuggestion('עזור לי לכתוב סיפור קצר בז\'אנר פנטזיה')">✨ כתוב סיפור קצר</button>
-        <button class="chip" onclick="sendSuggestion('הסבר לי מה זה Firebase ואיך להשתמש בו')">🔥 הסבר Firebase</button>
-        <button class="chip" onclick="sendSuggestion('תכתוב לי קוד React לאפליקציית TODO')">💻 קוד React</button>
-        <button class="chip" onclick="sendSuggestion('מה ההבדל בין Claude לGemini?')">🤖 AI comparison</button>
-      </div>
-    </div>
-    <div id="messages-container" style="display:none;">
-      <div class="message-container" id="messages"></div>
-    </div>
-  </div>
+  <!-- Body -->
+  <div id="body">
 
-  <div class="input-area">
-    <div class="input-container">
-      <div class="input-top">
-        <textarea
-          class="text-input"
-          id="msg-input"
-          placeholder="שאל אותי כל דבר..."
-          rows="1"
-          onkeydown="handleKeyDown(event)"
-          oninput="autoResize(this)"
-        ></textarea>
-        <button class="send-btn" id="send-btn" onclick="sendMessage()" disabled>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
-          </svg>
-        </button>
+    <!-- LEFT: Canvas / Vault / DM -->
+    <div id="cpanel">
+      <div class="ptabs">
+        <button class="ptab active" id="pt-map"   onclick="ptab('map')">🗺 מפה</button>
+        <button class="ptab"        id="pt-vault" onclick="ptab('vault')">📚 כספת</button>
+        <button class="ptab"        id="pt-dm"    onclick="ptab('dm')" style="display:none">⚔ לוח DM</button>
       </div>
-      <div class="input-bottom">
-        <div class="input-left-actions">
-          <button class="input-icon-btn" title="צרף קובץ">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
-            </svg>
-          </button>
-          <button class="input-icon-btn" title="מיקרופון">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/>
-            </svg>
-          </button>
-          <button class="input-icon-btn" title="תמונה">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="3" width="18" height="18" rx="2"/>
-              <circle cx="8.5" cy="8.5" r="1.5"/>
-              <path d="m21 15-5-5L5 21"/>
-            </svg>
-          </button>
+
+      <!-- Map Tab -->
+      <div id="tab-map">
+        <div class="ctbar">
+          <button class="tbtn active" id="tl-pencil" onclick="setTool('pencil')" title="עיפרון">✏️</button>
+          <button class="tbtn" id="tl-arrow"  onclick="setTool('arrow')"  title="חץ">➡️</button>
+          <button class="tbtn" id="tl-rect"   onclick="setTool('rect')"   title="מלבן">⬜</button>
+          <button class="tbtn" id="tl-circle" onclick="setTool('circle')" title="עיגול">⭕</button>
+          <button class="tbtn" id="tl-text"   onclick="setTool('text')"   title="טקסט">T</button>
+          <button class="tbtn" id="tl-eraser" onclick="setTool('eraser')" title="מחק">🧹</button>
+          <div class="tsep"></div>
+          <input type="color" id="cpicker" value="#c9a84c" title="צבע">
+          <select class="ssz" id="bsize" title="גודל">
+            <option value="2">דק</option>
+            <option value="4" selected>בינוני</option>
+            <option value="8">עבה</option>
+            <option value="14">עבה+</option>
+          </select>
+          <div class="tsep"></div>
+          <button class="tbtn" onclick="clearCanvas()" title="נקה" style="color:var(--ember2)">🗑</button>
+          <button class="tbtn" onclick="saveCanvas()" title="שמור" style="color:var(--green)">💾</button>
+          <button class="tbtn" onclick="loadCanvas()" title="טען" style="color:var(--gold)">📂</button>
         </div>
+        <div id="cwrap"><canvas id="mc"></canvas></div>
       </div>
-    </div>
-    <p class="input-disclaimer">Gemini עלול לטעות. עדיף לבדוק מידע חשוב. <a href="#">מדיניות פרטיות</a></p>
-  </div>
-</main>
 
-<div class="toast" id="toast"></div>
-
-<!-- Firebase SDK -->
-<script type="module">
-  // ============================================================
-  // FIREBASE CONFIG — הכנס כאן את הפרטים שלך
-  // זה בטוח לפרסם! ראה הסבר בצ'אט.
-  // ============================================================
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY_HERE",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
-
-  // ============================================================
-  // הפעל את Firebase כאשר יש config אמיתי
-  // ============================================================
-  const hasFirebase = firebaseConfig.apiKey !== "YOUR_API_KEY_HERE";
-
-  if (hasFirebase) {
-    try {
-      const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
-      const { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js');
-      const { getFirestore, collection, addDoc, getDocs, orderBy, query, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
-
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-
-      // Auth state
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          document.getElementById('firebase-status').innerHTML = `<span class="firebase-dot"></span> Firebase: מחובר`;
-          document.getElementById('firebase-status').style.color = '#4caf50';
-          document.getElementById('avatar-initials').textContent = user.displayName?.charAt(0) || 'U';
-          document.getElementById('user-name-display').textContent = user.displayName;
-          document.getElementById('user-email-display').textContent = user.email;
-          window.currentUser = user;
-          window.db = db;
-          loadChatHistory(user.uid, db);
-        }
-      });
-
-      // Google Sign In
-      document.querySelector('.user-avatar-btn').onclick = async () => {
-        if (!window.currentUser) {
-          const provider = new GoogleAuthProvider();
-          try {
-            await signInWithPopup(auth, provider);
-          } catch(e) { showToast('שגיאת התחברות'); }
-        }
-      };
-
-      // Save message to Firestore
-      window.saveToFirestore = async (userId, chatId, message) => {
-        if (!db || !userId) return;
-        await addDoc(collection(db, 'users', userId, 'chats', chatId, 'messages'), {
-          ...message,
-          timestamp: serverTimestamp()
-        });
-      };
-
-      // Load history
-      async function loadChatHistory(userId, db) {
-        const chatsRef = collection(db, 'users', userId, 'chats');
-        const snapshot = await getDocs(chatsRef);
-        // Update sidebar...
-      }
-
-    } catch(e) {
-      console.log('Firebase לא הוגדר:', e.message);
-    }
-  }
-</script>
-
-<script>
-  // ============================================================
-  // APP STATE
-  // ============================================================
-  let messages = [];
-  let isTyping = false;
-  let currentChatId = 'chat_' + Date.now();
-  let canvasVisible = false;
-
-  // RPG Project canvas content
-  const rpgCanvasContent = `
-    <h1>🎮 AI-Powered RPG Storytelling Hub</h1>
-    <h2>1. חזון הפרויקט</h2>
-    <p>פלטפורמה לניהול קמפיינים של RPG בעזרת AI, עם זיכרון, מפות ורישום אוטומטי.</p>
-    <h2>2. 4 עמודות התוכן</h2>
-    <h3>תקשורת (Communication Suite)</h3>
-    <ul>
-      <li><strong>Chat בזמן אמת:</strong> ממשק לשיחה בין שחקנים ו-DM</li>
-      <li><strong>Voice Live:</strong> תמלול קולי אוטומטי</li>
-      <li><strong>תרגום:</strong> תמיכה בשפות מרובות</li>
-    </ul>
-    <h3>בינה מלאכותית (AI Intelligence)</h3>
-    <ul>
-      <li><strong>The Chronicler:</strong> יצירת סיכומים ל-PDF/Markdown</li>
-      <li><strong>NPC Generator:</strong> יצירת דמויות דינמיות</li>
-      <li><strong>Lore AI:</strong> שמירת עקביות עולם</li>
-    </ul>
-    <h3>ארכיון (Firebase & Drive)</h3>
-    <ul>
-      <li><strong>Google Drive sync:</strong> גיבוי אוטומטי</li>
-      <li><strong>Vault:</strong> ספריית ה-lore</li>
-      <li><strong>State Persistence:</strong> שמירת מצב משחק</li>
-    </ul>
-    <h3>מפות (Interactive Canvas)</h3>
-    <ul>
-      <li><strong>Live Board:</strong> מפה אינטראקטיבית</li>
-      <li><strong>Layers:</strong> שכבות למשחק</li>
-    </ul>
-  `;
-
-  // ============================================================
-  // UI FUNCTIONS
-  // ============================================================
-  function autoResize(el) {
-    el.style.height = 'auto';
-    el.style.height = Math.min(el.scrollHeight, 200) + 'px';
-    document.getElementById('send-btn').disabled = !el.value.trim();
-  }
-
-  function handleKeyDown(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
-  }
-
-  function toggleCanvas() {
-    canvasVisible = !canvasVisible;
-    const panel = document.getElementById('canvas-panel');
-    if (canvasVisible) {
-      panel.classList.add('visible');
-      document.getElementById('canvas-content').innerHTML = rpgCanvasContent;
-    } else {
-      panel.classList.remove('visible');
-    }
-  }
-
-  function newChat() {
-    messages = [];
-    currentChatId = 'chat_' + Date.now();
-    document.getElementById('messages').innerHTML = '';
-    document.getElementById('welcome-screen').style.display = 'flex';
-    document.getElementById('messages-container').style.display = 'none';
-    document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
-  }
-
-  function loadChat(type) {
-    document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
-    event.target.classList.add('active');
-    if (type === 'rpg') {
-      showSystemMessage('📄 הצג את Canvas של פרויקט ה-RPG', true);
-    }
-  }
-
-  function toggleModelMenu() {
-    const models = ['Gemini 2.0 Flash', 'Gemini 2.0 Pro', 'Gemini 1.5 Flash'];
-    const btn = document.getElementById('model-btn');
-    const curr = btn.textContent.trim().replace('▾','').trim();
-    const idx = models.indexOf(curr);
-    const next = models[(idx + 1) % models.length];
-    btn.innerHTML = `${next} <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>`;
-    showToast('מודל: ' + next);
-  }
-
-  // ============================================================
-  // CHAT FUNCTIONS
-  // ============================================================
-  function sendSuggestion(text) {
-    document.getElementById('msg-input').value = text;
-    sendMessage();
-  }
-
-  function sendMessage() {
-    const input = document.getElementById('msg-input');
-    const text = input.value.trim();
-    if (!text || isTyping) return;
-
-    // Hide welcome screen
-    document.getElementById('welcome-screen').style.display = 'none';
-    document.getElementById('messages-container').style.display = 'block';
-
-    // Add user message
-    addMessage('user', text);
-    input.value = '';
-    input.style.height = 'auto';
-    document.getElementById('send-btn').disabled = true;
-
-    // Show typing
-    isTyping = true;
-    showTyping();
-
-    // Call Anthropic API
-    callClaudeAPI(text);
-  }
-
-  function addMessage(role, content, html = false) {
-    const container = document.getElementById('messages');
-    const row = document.createElement('div');
-    row.className = `message-row ${role === 'user' ? 'user-msg' : 'ai-msg'}`;
-
-    if (role === 'user') {
-      row.innerHTML = `<div class="msg-bubble">${escapeHtml(content)}</div>`;
-    } else {
-      row.innerHTML = `
-        <div class="msg-avatar gemini-msg-avatar">
-          <svg width="24" height="24" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
-            <path fill="url(#sparkle-grad)" d="M164.93 86.68c-13.56-5.84-25.42-13.84-35.6-24.01-10.17-10.17-18.18-22.04-24.01-35.6-2.23-5.19-4.04-10.54-5.42-16.02C99.45 9.26 97.85 8 96 8s-3.45 1.26-3.9 3.05c-1.38 5.48-3.18 10.81-5.42 16.02-5.84 13.56-13.84 25.43-24.01 35.6-10.17 10.16-22.04 18.17-35.6 24.01-5.19 2.23-10.54 4.04-16.02 5.42C9.26 92.55 8 94.15 8 96s1.26 3.45 3.05 3.9c5.48 1.38 10.81 3.18 16.02 5.42 13.56 5.84 25.42 13.84 35.6 24.01 10.17 10.17 18.18 22.04 24.01 35.6 2.24 5.2 4.04 10.54 5.42 16.02A4.03 4.03 0 0 0 96 184c1.85 0 3.45-1.26 3.9-3.05 1.38-5.48 3.18-10.81 5.42-16.02 5.84-13.56 13.84-25.42 24.01-35.6 10.17-10.17 22.04-18.18 35.6-24.01 5.2-2.24 10.54-4.04 16.02-5.42A4.03 4.03 0 0 0 184 96c0-1.85-1.26-3.45-3.05-3.9-5.48-1.38-10.81-3.18-16.02-5.42"/>
-          </svg>
+      <!-- Vault Tab -->
+      <div id="tab-vault">
+        <div class="vhdr">
+          <h3>📜 כספת הכרוניקן</h3>
+          <button class="tbtn" onclick="openChronicler()">✨ סיכום חדש</button>
         </div>
-        <div class="ai-msg-content">
-          <div class="ai-msg-text" id="msg-${Date.now()}">${html ? content : escapeHtml(content)}</div>
-          <div class="msg-actions">
-            <button class="msg-action-btn" onclick="copyMsg(this)">📋 העתק</button>
-            <button class="msg-action-btn">👍</button>
-            <button class="msg-action-btn">👎</button>
+        <div class="vlist" id="vlist">
+          <div class="vempty" id="vempty">
+            <div class="vi">📜</div>
+            <p>הכספת ריקה</p>
+            <p style="font-size:13px;color:var(--text3)">הפעל את הכרוניקן ליצירת סיכומים</p>
           </div>
         </div>
-      `;
-    }
-
-    container.appendChild(row);
-    scrollToBottom();
-
-    messages.push({ role, content });
-
-    // Save to Firebase if connected
-    if (window.saveToFirestore && window.currentUser) {
-      window.saveToFirestore(window.currentUser.uid, currentChatId, { role, content });
-    }
-  }
-
-  function showSystemMessage(text, openCanvas = false) {
-    document.getElementById('welcome-screen').style.display = 'none';
-    document.getElementById('messages-container').style.display = 'block';
-    addMessage('ai', `<em>${text}</em>`, true);
-    if (openCanvas) toggleCanvas();
-  }
-
-  let typingEl = null;
-  function showTyping() {
-    const container = document.getElementById('messages');
-    const row = document.createElement('div');
-    row.id = 'typing-row';
-    row.className = 'message-row ai-msg';
-    row.innerHTML = `
-      <div class="msg-avatar gemini-msg-avatar">
-        <svg width="24" height="24" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
-          <path fill="url(#sparkle-grad)" d="M164.93 86.68c-13.56-5.84-25.42-13.84-35.6-24.01-10.17-10.17-18.18-22.04-24.01-35.6-2.23-5.19-4.04-10.54-5.42-16.02C99.45 9.26 97.85 8 96 8s-3.45 1.26-3.9 3.05c-1.38 5.48-3.18 10.81-5.42 16.02-5.84 13.56-13.84 25.43-24.01 35.6-10.17 10.16-22.04 18.17-35.6 24.01-5.19 2.23-10.54 4.04-16.02 5.42C9.26 92.55 8 94.15 8 96s1.26 3.45 3.05 3.9c5.48 1.38 10.81 3.18 16.02 5.42 13.56 5.84 25.42 13.84 35.6 24.01 10.17 10.17 18.18 22.04 24.01 35.6 2.24 5.2 4.04 10.54 5.42 16.02A4.03 4.03 0 0 0 96 184c1.85 0 3.45-1.26 3.9-3.05 1.38-5.48 3.18-10.81 5.42-16.02 5.84-13.56 13.84-25.42 24.01-35.6 10.17-10.17 22.04-18.18 35.6-24.01 5.2-2.24 10.54-4.04 16.02-5.42A4.03 4.03 0 0 0 184 96c0-1.85-1.26-3.45-3.05-3.9-5.48-1.38-10.81-3.18-16.02-5.42"/>
-        </svg>
       </div>
-      <div class="ai-msg-content">
-        <div class="typing-indicator">
-          <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+
+      <!-- DM Board Tab -->
+      <div id="tab-dm">
+        <div class="dmsec">
+          <div class="dmsec-t">🤖 כרוניקן AI</div>
+          <button class="dmbtn g" onclick="openChronicler()">✨ <span>סכם את הפרק הנוכחי</span></button>
+          <button class="dmbtn g" onclick="openCMode('battle')">⚔️ <span>סכם את הקרב האחרון</span></button>
+          <button class="dmbtn g" onclick="openCMode('lore')">🌍 <span>הפק דף לור מהשיחה</span></button>
+          <button class="dmbtn g" onclick="openCMode('recap')">📋 <span>תקציר מהיר</span></button>
         </div>
-      </div>`;
-    container.appendChild(row);
-    scrollToBottom();
-  }
+        <div class="dmsec">
+          <div class="dmsec-t">🗺️ מפה</div>
+          <button class="dmbtn" onclick="clearCanvas()">🗑️ <span>נקה לוח</span></button>
+          <button class="dmbtn" onclick="saveCanvas()">💾 <span>שמור מצב מפה</span></button>
+          <button class="dmbtn" onclick="loadCanvas()">📂 <span>טען מפה שמורה</span></button>
+        </div>
+        <div class="dmsec">
+          <div class="dmsec-t">⚔️ בקרת מערכה</div>
+          <button class="dmbtn" onclick="sysMsg('🔔 הפגישה מתחילה! ברוכים הבאים לשולחן.')">🔔 <span>פתיחת פגישה</span></button>
+          <button class="dmbtn" onclick="sysMsg('⏸️ הפסקה קצרה — 10 דקות')">⏸️ <span>הכרזת הפסקה</span></button>
+          <button class="dmbtn r" onclick="sysMsg('💀 GAME OVER — המערכה הסתיימה. תודה לכולם!')">💀 <span>סיום מערכה</span></button>
+        </div>
+      </div>
+    </div>
 
-  function removeTyping() {
-    const el = document.getElementById('typing-row');
-    if (el) el.remove();
-    isTyping = false;
-  }
+    <!-- RIGHT: Channels + Chat -->
+    <div id="chat-area">
 
-  async function callClaudeAPI(userText) {
+      <!-- Channels Sidebar -->
+      <div id="chs">
+        <div class="ss">
+          <div class="ss-t">ערוצים</div>
+          <div class="chi active" id="ch-story" onclick="swch('story')"><span class="icon">⚔️</span><span class="cn">עלילה</span></div>
+          <div class="chi"        id="ch-chat"  onclick="swch('chat')"> <span class="icon">💬</span><span class="cn">שיחה חופשית</span></div>
+          <div class="chi"        id="ch-rules" onclick="swch('rules')"><span class="icon">📜</span><span class="cn">חוקים</span></div>
+          <div class="chi"        id="ch-lore"  onclick="swch('lore')"> <span class="icon">🌍</span><span class="cn">לור</span></div>
+          <div class="chi"        id="ch-maps"  onclick="swch('maps')"> <span class="icon">🗺️</span><span class="cn">מפות</span></div>
+        </div>
+        <div class="olst">
+          <div class="ss-t" style="margin-bottom:7px">מחובר</div>
+          <div class="ouser"><div class="odot"></div><span id="ome">—</span></div>
+        </div>
+      </div>
+
+      <!-- Chat -->
+      <div id="chat-main">
+        <div id="chat-hdr">
+          <span id="aci">⚔️</span>
+          <span class="cn2" id="acn">עלילה</span>
+          <span class="cd" id="acd">· ערוץ הסיפור הראשי</span>
+          <div class="hacts">
+            <button class="ibtn" onclick="openChronicler()" title="כרוניקן">✨</button>
+          </div>
+        </div>
+
+        <div id="msgs">
+          <div class="sysmsg">Chronicle — RPG Command Hub</div>
+        </div>
+
+        <div id="iarea">
+          <div class="iacts">
+            <button class="iabtn" onclick="openChronicler()">✨ כרוניקן</button>
+            <button class="iabtn" title="בקרוב">🎙 קולי</button>
+            <button class="iabtn" title="בקרוב">📎 קובץ</button>
+          </div>
+          <div class="irow">
+            <textarea id="minput" placeholder="כתוב הודעה..." rows="1"
+              onkeydown="hkey(event)" oninput="arz(this)"></textarea>
+            <button class="sbtn" onclick="sendMsg()">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ MODALS ══════════════ -->
+
+<!-- Chronicler -->
+<div class="mo" id="mchro">
+  <div class="modal wide">
+    <div class="mhdr">
+      <span class="mtitle">✨ הכרוניקן — AI Storyteller</span>
+      <button class="mclose" onclick="closeM('mchro')">✕</button>
+    </div>
+    <div class="mbody">
+      <div id="chro-pre">
+        <div class="fg" style="margin-bottom:12px">
+          <label style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);display:block;margin-bottom:5px">סוג סיכום</label>
+          <select id="chro-type" class="stin" style="font-family:'Crimson Text',serif;font-size:16px">
+            <option value="story">סיכום עלילתי — סגנון ספרותי</option>
+            <option value="battle">סיכום קרב — טקטי ומפורט</option>
+            <option value="lore">דף לור — אנציקלופדי</option>
+            <option value="recap">תקציר מהיר — נקודות עיקריות</option>
+          </select>
+        </div>
+        <p style="color:var(--text2);font-size:15px;line-height:1.6;margin-bottom:14px;direction:rtl">
+          הכרוניקן ישאב את ההודעות מהערוץ <strong style="color:var(--gold)" id="chro-ch-name">הנוכחי</strong> ויצור סיכום מובנה בסגנון הנבחר.
+        </p>
+        <button class="btn-gold" onclick="runChro()" style="width:100%;padding:11px;font-size:12px;letter-spacing:2px">
+          ⚡ הפעל כרוניקן
+        </button>
+      </div>
+      <div id="chro-res" style="display:none">
+        <div id="chro-out" class="chro-out"></div>
+      </div>
+    </div>
+    <div class="mfoot" id="chro-foot" style="display:none">
+      <button class="btn-sec" onclick="closeM('mchro')">סגור</button>
+      <button class="btn-gold" onclick="saveVault()">💾 שמור לכספת</button>
+    </div>
+  </div>
+</div>
+
+<!-- Vault Detail -->
+<div class="mo" id="mvault">
+  <div class="modal wide">
+    <div class="mhdr">
+      <span class="mtitle" id="vd-title">📜 כרוניקה</span>
+      <button class="mclose" onclick="closeM('mvault')">✕</button>
+    </div>
+    <div class="mbody">
+      <p id="vd-meta" style="font-family:'Cinzel',serif;font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:12px"></p>
+      <div id="vd-body" class="chro-out"></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn-sec" onclick="closeM('mvault')">סגור</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings -->
+<div class="mo" id="mset">
+  <div class="modal">
+    <div class="mhdr">
+      <span class="mtitle">⚙ הגדרות</span>
+      <button class="mclose" onclick="closeM('mset')">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="stsec">
+        <h4>🤖 כרוניקן AI</h4>
+        <label class="stlabel">Anthropic API Key</label>
+        <input type="password" id="akey" class="stin" placeholder="sk-ant-api03-..." dir="ltr"
+          style="font-family:'JetBrains Mono',monospace;font-size:13px">
+        <p class="stnote">המפתח נשמר בדפדפן בלבד (localStorage) ואינו עולה לשרת.</p>
+        <p class="stnote" style="margin-top:4px">ניתן לקבל מפתח ב: <a href="https://console.anthropic.com" target="_blank" style="color:var(--gold)">console.anthropic.com</a></p>
+      </div>
+      <div class="stsec">
+        <h4>👤 פרופיל</h4>
+        <label class="stlabel">שם מציג</label>
+        <input type="text" id="stname" class="stin" placeholder="שם הדמות שלך">
+        <label class="stlabel">תפקיד</label>
+        <select id="strole" class="stin" style="font-family:'Crimson Text',serif;font-size:16px">
+          <option value="player">שחקן</option>
+          <option value="dm">מאסטר המשחק (DM)</option>
+        </select>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn-sec" onclick="closeM('mset')">ביטול</button>
+      <button class="btn-gold" onclick="saveSettings()">שמור שינויים</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ══════════════ FIREBASE + LOGIC ══════════════ -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import {
+  getAuth, onAuthStateChanged,
+  signInWithEmailAndPassword, createUserWithEmailAndPassword,
+  signOut, updateProfile
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import {
+  getFirestore, collection, addDoc, onSnapshot,
+  query, orderBy, limit, serverTimestamp,
+  doc, setDoc, getDoc, getDocs
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+/* ── Firebase init ── */
+const app = initializeApp({
+  apiKey:"AIzaSyCAMzikzVwHDQg7_8MEtplVN99wtaA4ajE",
+  authDomain:"dnd-helper-filesandmaps.firebaseapp.com",
+  projectId:"dnd-helper-filesandmaps",
+  storageBucket:"dnd-helper-filesandmaps.firebasestorage.app",
+  messagingSenderId:"683061058080",
+  appId:"1:683061058080:web:574afabe84ff30e5b27a45",
+  measurementId:"G-RTR22TQD0C"
+});
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+/* ── App State ── */
+let cu = null, role = 'player', curCh = 'story', unsub = null;
+let chroText = '', curTool = 'pencil';
+let drawing = false, lx = 0, ly = 0, sx = 0, sy = 0, snap = null;
+let canvas, ctx;
+
+const CHS = {
+  story:{ icon:'⚔️', name:'עלילה',       desc:'ערוץ הסיפור הראשי' },
+  chat: { icon:'💬', name:'שיחה חופשית', desc:'שיחות כלליות' },
+  rules:{ icon:'📜', name:'חוקים',        desc:'שאלות וחוקים' },
+  lore: { icon:'🌍', name:'לור',          desc:'עולם המשחק' },
+  maps: { icon:'🗺️', name:'מפות',         desc:'מפות ותיאורי מקומות' },
+};
+
+/* ── Auth ── */
+onAuthStateChanged(auth, async u => {
+  if (u) {
+    cu = u;
     try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          system: "אתה Gemini, עוזר AI חכם מבית Google. ענה בעברית אלא אם מבקשים אחרת. תן תשובות מועילות, ידידותיות ומקצועיות. השתמש ב-Markdown לפורמט.",
-          messages: messages.slice(-10).map(m => ({ role: m.role, content: m.content }))
-        })
-      });
+      const s = await getDoc(doc(db,'users',u.uid));
+      if (s.exists()) role = s.data().role || 'player';
+    } catch(e){}
+    showApp();
+  } else { cu=null; showAuth(); }
+});
 
-      const data = await response.json();
-      removeTyping();
+window.doLogin = async () => {
+  const e=V('le'),p=V('lp'),err=g('aerr');
+  err.textContent='';
+  try { await signInWithEmailAndPassword(auth,e,p); }
+  catch(ex){ err.textContent=tae(ex.code); }
+};
 
-      if (data.content && data.content[0]) {
-        const text = data.content[0].text;
-        addMessage('ai', markdownToHtml(text), true);
-      } else {
-        addMessage('ai', '⚠️ לא הצלחתי לקבל תשובה. נסה שוב.', true);
-      }
-    } catch (err) {
-      removeTyping();
-      addMessage('ai', `<p>⚠️ שגיאה: לא ניתן להתחבר ל-API.</p><p style="color:#9aa0a6;font-size:13px;">ודא שה-API key של Anthropic מוגדר נכון.</p>`, true);
-    }
-    document.getElementById('send-btn').disabled = false;
-  }
+window.doSignup = async () => {
+  const n=V('sn'),e=V('se'),p=V('sp'),r=V('sr',true),err=g('aerr');
+  err.textContent='';
+  if(!n){err.textContent='נא להזין שם';return;}
+  try {
+    const c = await createUserWithEmailAndPassword(auth,e,p);
+    await updateProfile(c.user,{displayName:n});
+    await setDoc(doc(db,'users',c.user.uid),{name:n,role:r,email:e,createdAt:serverTimestamp()});
+    role=r;
+  } catch(ex){ err.textContent=tae(ex.code); }
+};
 
-  // ============================================================
-  // UTILS
-  // ============================================================
-  function escapeHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-  }
+window.doLogout = async () => { if(unsub)unsub(); await signOut(auth); };
 
-  function markdownToHtml(md) {
-    return md
-      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/`([^`]+)`/g, '<code>$1</code>')
-      .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
-      .replace(/^- (.*$)/gim, '<li>$1</li>')
-      .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/^(?!<[h|u|p|l|o])/gm, '')
-      || `<p>${md}</p>`;
-  }
+function tae(c){
+  return ({
+    'auth/invalid-email':'אימייל לא תקין',
+    'auth/user-not-found':'משתמש לא נמצא',
+    'auth/wrong-password':'סיסמה שגויה',
+    'auth/email-already-in-use':'אימייל כבר בשימוש',
+    'auth/weak-password':'סיסמה חלשה (מינ׳ 6 תווים)',
+    'auth/invalid-credential':'פרטי התחברות שגויים',
+  }[c]) || `שגיאה: ${c}`;
+}
 
-  function scrollToBottom() {
-    const area = document.getElementById('chat-area');
-    setTimeout(() => area.scrollTop = area.scrollHeight, 50);
-  }
+function showApp(){
+  g('auth-screen').style.display='none';
+  const a=g('app'); a.style.display='flex';
+  setTimeout(()=>a.classList.add('on'),10);
+  const nm = cu.displayName||cu.email;
+  g('huname').textContent=nm;
+  g('ome').textContent=nm;
+  if(role==='dm'){g('hrole').style.display='inline';g('pt-dm').style.display='inline-block';}
+  g('stname').value=nm;
+  g('strole').value=role;
+  g('akey').value=localStorage.getItem('akey')||'';
+  initCanvas();
+  swch('story');
+  loadVault();
+  loadCanvas();
+}
+function showAuth(){g('auth-screen').style.display='flex';g('app').style.display='none';}
 
-  function copyMsg(btn) {
-    const text = btn.closest('.ai-msg-content').querySelector('.ai-msg-text').innerText;
-    navigator.clipboard.writeText(text).then(() => showToast('הועתק ✓'));
-  }
+window.authTab = t => {
+  g('tl').classList.toggle('active',t==='login');
+  g('ts').classList.toggle('active',t==='signup');
+  g('lf').style.display=t==='login'?'':'none';
+  g('sf').style.display=t==='signup'?'':'none';
+  g('aerr').textContent='';
+};
 
-  // Init input listener
-  document.getElementById('msg-input').addEventListener('input', function() {
-    document.getElementById('send-btn').disabled = !this.value.trim();
+/* ── Channels ── */
+window.swch = ch => {
+  if(unsub){unsub();unsub=null;}
+  curCh=ch;
+  Object.keys(CHS).forEach(k=>g('ch-'+k)?.classList.toggle('active',k===ch));
+  const i=CHS[ch];
+  g('aci').textContent=i.icon;
+  g('acn').textContent=i.name;
+  g('acd').textContent='· '+i.desc;
+  g('chro-ch-name').textContent=i.name;
+  g('msgs').innerHTML=`<div class="sysmsg">─ ${i.icon} ${i.name} ─</div>`;
+  const q=query(collection(db,'channels',ch,'messages'),orderBy('createdAt','asc'),limit(100));
+  unsub=onSnapshot(q,snap=>{
+    snap.docChanges().forEach(c=>{ if(c.type==='added') renderMsg(c.doc.data(),ch); });
+    stb();
   });
+};
+
+function renderMsg(d,ch){
+  const el=g('msgs');
+  if(d.type==='system'){
+    const div=document.createElement('div');
+    div.className='sysmsg';div.textContent=d.text;
+    el.appendChild(div);return;
+  }
+  const own=cu&&d.uid===cu.uid;
+  const t=d.createdAt?.toDate?d.createdAt.toDate().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}):new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
+  const div=document.createElement('div');
+  div.className=`msg${own?' own':''}${ch==='story'?' sc':''}`;
+  div.innerHTML=`<div class="mm"><span class="ma ${d.role||'player'}">${esc(d.authorName||'אנונימי')}</span><span class="mt">${t}</span></div><div class="mb">${esc(d.text||'')}</div>`;
+  el.appendChild(div);
+}
+function stb(){const e=g('msgs');e.scrollTop=e.scrollHeight;}
+
+/* ── Send Message ── */
+window.sendMsg = async () => {
+  if(!cu)return;
+  const el=g('minput'),text=el.value.trim();
+  if(!text)return;
+  el.value='';el.style.height='';
+  try {
+    await addDoc(collection(db,'channels',curCh,'messages'),{
+      text,uid:cu.uid,authorName:cu.displayName||cu.email,
+      role,createdAt:serverTimestamp(),channel:curCh,
+    });
+  } catch(e){toast('שגיאה בשליחה');}
+};
+
+window.sysMsg = async txt => {
+  if(!cu)return;
+  try {
+    await addDoc(collection(db,'channels',curCh,'messages'),{
+      text:txt,type:'system',uid:cu.uid,createdAt:serverTimestamp(),
+    });
+    toast('הודעת מערכת נשלחה ✓');
+  } catch(e){toast('שגיאה');}
+};
+
+window.hkey = e => { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();} };
+window.arz  = el => { el.style.height='auto';el.style.height=Math.min(el.scrollHeight,110)+'px'; };
+
+/* ── Panel Tabs ── */
+window.ptab = t => {
+  ['map','vault','dm'].forEach(k=>{
+    const el=g('tab-'+k);if(el)el.style.display=k===t?'flex':'none';
+    g('pt-'+k)?.classList.toggle('active',k===t);
+  });
+};
+
+/* ── Canvas ── */
+function initCanvas(){
+  canvas=g('mc');ctx=canvas.getContext('2d');
+  const rz=()=>{
+    const w=g('cwrap');
+    const id=canvas.width>0?ctx.getImageData(0,0,canvas.width,canvas.height):null;
+    canvas.width=w.clientWidth;canvas.height=w.clientHeight;
+    setCD();if(id)ctx.putImageData(id,0,0);
+  };
+  rz();
+  new ResizeObserver(rz).observe(g('cwrap'));
+  canvas.addEventListener('mousedown',cdown);
+  canvas.addEventListener('mousemove',cmove);
+  canvas.addEventListener('mouseup',cup);
+  canvas.addEventListener('mouseleave',cup);
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();cdown(e.touches[0]);},{passive:false});
+  canvas.addEventListener('touchmove', e=>{e.preventDefault();cmove(e.touches[0]);},{passive:false});
+  canvas.addEventListener('touchend',  e=>{e.preventDefault();cup();},{passive:false});
+}
+
+function setCD(){
+  ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.strokeStyle=g('cpicker').value;
+  ctx.lineWidth=+g('bsize').value;
+}
+
+function gpos(e){
+  const r=canvas.getBoundingClientRect();
+  return{x:(e.clientX||e.pageX)-r.left,y:(e.clientY||e.pageY)-r.top};
+}
+
+function cdown(e){
+  drawing=true;const p=gpos(e);lx=p.x;ly=p.y;sx=p.x;sy=p.y;
+  setCD();
+  if(curTool==='pencil'||curTool==='eraser'){ctx.beginPath();ctx.moveTo(lx,ly);}
+  else if(curTool==='text'){
+    const t=prompt('הקלד טקסט:');
+    if(t){ctx.font=`${+g('bsize').value*4+10}px Cinzel,serif`;ctx.fillStyle=g('cpicker').value;ctx.fillText(t,lx,ly);}
+    drawing=false;
+  } else { snap=ctx.getImageData(0,0,canvas.width,canvas.height); }
+}
+
+function cmove(e){
+  if(!drawing)return;
+  const p=gpos(e);setCD();
+  if(curTool==='pencil'){ctx.lineTo(p.x,p.y);ctx.stroke();}
+  else if(curTool==='eraser'){
+    ctx.globalCompositeOperation='destination-out';
+    ctx.lineWidth=+g('bsize').value*3;
+    ctx.lineTo(p.x,p.y);ctx.stroke();
+    ctx.globalCompositeOperation='source-over';
+  } else if(snap){
+    ctx.putImageData(snap,0,0);
+    if(curTool==='rect'){ctx.strokeRect(sx,sy,p.x-sx,p.y-sy);}
+    else if(curTool==='circle'){
+      ctx.beginPath();
+      const rx=(p.x-sx)/2,ry=(p.y-sy)/2;
+      ctx.ellipse(sx+rx,sy+ry,Math.abs(rx),Math.abs(ry),0,0,Math.PI*2);
+      ctx.stroke();
+    } else if(curTool==='arrow'){ drawArrow(sx,sy,p.x,p.y); }
+  }
+  lx=p.x;ly=p.y;
+}
+
+function cup(){drawing=false;snap=null;ctx.beginPath();}
+
+function drawArrow(x1,y1,x2,y2){
+  const h=14,a=Math.atan2(y2-y1,x2-x1);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-h*Math.cos(a-Math.PI/6),y2-h*Math.sin(a-Math.PI/6));
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-h*Math.cos(a+Math.PI/6),y2-h*Math.sin(a+Math.PI/6));
+  ctx.stroke();
+}
+
+window.setTool = t => {
+  curTool=t;
+  document.querySelectorAll('.tbtn[id^="tl-"]').forEach(b=>b.classList.toggle('active',b.id==='tl-'+t));
+};
+
+window.clearCanvas = () => {
+  if(confirm('למחוק את כל הציורים על הלוח?')){
+    ctx.clearRect(0,0,canvas.width,canvas.height);toast('הלוח נוקה ✓');
+  }
+};
+
+window.saveCanvas = async () => {
+  if(!cu)return;
+  try {
+    const d=canvas.toDataURL('image/png');
+    await setDoc(doc(db,'canvas','current'),{data:d,savedBy:cu.displayName||cu.email,savedAt:serverTimestamp()});
+    toast('המפה נשמרה ✓');
+  } catch(e){toast('שגיאה בשמירה');}
+};
+
+window.loadCanvas = async () => {
+  try {
+    const s=await getDoc(doc(db,'canvas','current'));
+    if(s.exists()&&s.data().data){
+      const img=new Image();img.onload=()=>ctx.drawImage(img,0,0);img.src=s.data().data;
+    }
+  } catch(e){}
+};
+
+/* ── Chronicler ── */
+window.openChronicler = () => {
+  g('chro-pre').style.display='';
+  g('chro-res').style.display='none';
+  g('chro-foot').style.display='none';
+  chroText='';
+  openM('mchro');
+};
+
+window.openCMode = m => {
+  g('chro-type').value=m;
+  openChronicler();
+};
+
+window.runChro = async () => {
+  const key=localStorage.getItem('akey');
+  if(!key){toast('נא להגדיר API Key בהגדרות ⚙');closeM('mchro');openSettings();return;}
+  
+  const type=g('chro-type').value;
+  g('chro-pre').style.display='none';
+  g('chro-res').style.display='';
+  g('chro-out').innerHTML='<div class="chro-load"><div class="spin"></div><span>הכרוניקן כותב את הכרוניקה...</span></div>';
+
+  // Gather messages
+  let msgs=[];
+  try {
+    const q=query(collection(db,'channels',curCh,'messages'),orderBy('createdAt','asc'),limit(60));
+    const sn=await getDocs(q);
+    msgs=sn.docs.map(d=>d.data()).filter(d=>d.text&&d.type!=='system').map(d=>`[${d.authorName||'אנונימי'}]: ${d.text}`);
+  } catch(e){}
+
+  if(!msgs.length){g('chro-out').textContent='אין הודעות בערוץ זה עדיין.';g('chro-foot').style.display='flex';return;}
+
+  const prompts={
+    story:'אתה הכרוניקן של קבוצת משחק תפקידים. קרא את תמלול השיחה הבאה וכתוב סיכום עלילתי בעברית בסגנון ספרותי מרהיב, בגוף שלישי, כאילו אתה מספר את הסיפור לדורות הבאים. השתמש בתיאורים עשירים ובשפה גבוהה.',
+    battle:'אתה הכרוניקן של קבוצת משחק תפקידים. קרא את תמלול השיחה וכתוב סיכום קרב מלא בעברית: מה קרה, מי לחם ואיך, מה היתה האסטרטגיה, נקודות מפנה, ומה היה הסיום.',
+    lore:'אתה הכרוניקן של קבוצת משחק תפקידים. קרא את השיחה וכתוב דף לור אנציקלופדי בעברית — תאר מקומות, דמויות, ארגונים, מאורעות היסטוריים ופרטי עולם שעלו בשיחה.',
+    recap:'אתה הכרוניקן של קבוצת משחק תפקידים. קרא את השיחה וכתוב תקציר ממוספר בעברית — נקודות עיקריות בלבד, תמציתי, ממוספר 1, 2, 3...',
+  };
+
+  try {
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':key,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true',
+      },
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        messages:[{role:'user',content:`${prompts[type]}\n\n--- תמלול השיחה (ערוץ: ${CHS[curCh].name}) ---\n${msgs.join('\n')}\n\nכתוב את הכרוניקה:`}]
+      })
+    });
+    const data=await res.json();
+    if(data.error)throw new Error(data.error.message);
+    chroText=data.content?.[0]?.text||'לא ניתן היה לייצר תוצאה';
+    g('chro-out').textContent=chroText;
+    g('chro-foot').style.display='flex';
+  } catch(e){
+    g('chro-out').textContent=`שגיאה: ${e.message}`;
+    g('chro-foot').style.display='flex';
+  }
+};
+
+window.saveVault = async () => {
+  if(!chroText||!cu)return;
+  const type=g('chro-type').value;
+  const types={story:'עלילה',battle:'קרב',lore:'לור',recap:'תקציר'};
+  try {
+    await addDoc(collection(db,'vault'),{
+      text:chroText,type,typeName:types[type],
+      channel:curCh,channelName:CHS[curCh].name,
+      createdBy:cu.displayName||cu.email,
+      createdAt:serverTimestamp(),
+    });
+    toast('נשמר לכספת ✓');
+    closeM('mchro');
+    loadVault();
+    ptab('vault');
+  } catch(e){toast('שגיאה בשמירה');}
+};
+
+/* ── Vault ── */
+async function loadVault(){
+  try {
+    const q=query(collection(db,'vault'),orderBy('createdAt','desc'),limit(20));
+    const sn=await getDocs(q);
+    const list=g('vlist'),empty=g('vempty');
+    list.querySelectorAll('.vi').forEach(el=>el.remove());
+    if(sn.empty){if(empty)empty.style.display='flex';return;}
+    if(empty)empty.style.display='none';
+    sn.docs.forEach(d=>{
+      const item={id:d.id,...d.data()};
+      const date=item.createdAt?.toDate?item.createdAt.toDate().toLocaleDateString('he-IL'):'—';
+      const div=document.createElement('div');
+      div.className='vi';
+      div.innerHTML=`<div class="vi-title">📜 ${esc(item.typeName||item.type)} — ${esc(item.channelName||'')}</div><div class="vi-meta">כתב: ${esc(item.createdBy||'—')} · ${date}</div><div class="vi-prev">${esc(item.text||'').slice(0,130)}...</div>`;
+      div.onclick=()=>showVD(item);
+      list.appendChild(div);
+    });
+  } catch(e){}
+}
+
+function showVD(item){
+  const date=item.createdAt?.toDate?item.createdAt.toDate().toLocaleDateString('he-IL',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
+  g('vd-title').textContent=`📜 ${item.typeName||item.type} — ${item.channelName||''}`;
+  g('vd-meta').textContent=`כתב: ${item.createdBy||'—'} · ${date}`;
+  g('vd-body').textContent=item.text||'';
+  openM('mvault');
+}
+
+/* ── Settings ── */
+window.openSettings = () => {
+  g('akey').value=localStorage.getItem('akey')||'';
+  g('stname').value=cu?.displayName||'';
+  g('strole').value=role;
+  openM('mset');
+};
+
+window.saveSettings = async () => {
+  const key=g('akey').value.trim();
+  const name=g('stname').value.trim();
+  const r=g('strole').value;
+  if(key) localStorage.setItem('akey',key);
+  if(cu&&name){
+    try{
+      await updateProfile(cu,{displayName:name});
+      await setDoc(doc(db,'users',cu.uid),{name,role:r},{merge:true});
+      role=r;
+      g('huname').textContent=name;
+      g('ome').textContent=name;
+      g('hrole').style.display=r==='dm'?'inline':'none';
+      g('pt-dm').style.display=r==='dm'?'inline-block':'none';
+    }catch(e){}
+  }
+  closeM('mset');
+  toast('הגדרות נשמרו ✓');
+};
+
+/* ── Modal helpers ── */
+window.openM  = id=>g(id).classList.add('open');
+window.closeM = id=>g(id).classList.remove('open');
+document.querySelectorAll('.mo').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');}));
+
+/* ── Toast ── */
+window.toast = (msg,ms=2600)=>{
+  const t=g('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),ms);
+};
+
+/* ── Utils ── */
+function g(id){return document.getElementById(id);}
+function V(id,sel){const e=g(id);return sel?e.value:e.value;}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 </script>
 </body>
 </html>
