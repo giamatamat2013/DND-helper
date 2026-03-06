@@ -45,6 +45,63 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Crimso
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
+/* ═══════════════ ROOM SCREEN ═══════════════ */
+#room-screen{
+  position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+  background:var(--bg);z-index:900;
+}
+#room-screen::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 50% at 70% 30%,rgba(201,168,76,.08) 0%,transparent 100%),
+             radial-gradient(ellipse 40% 40% at 20% 80%,rgba(61,158,106,.06) 0%,transparent 100%);
+  pointer-events:none;
+}
+.room-card{
+  position:relative;width:370px;
+  background:var(--surface);border:1px solid var(--border2);border-radius:10px;
+  padding:36px 34px;
+  box-shadow:0 24px 70px rgba(0,0,0,.85),0 0 0 1px rgba(201,168,76,.08) inset;
+  text-align:center;
+}
+.room-icon{font-size:40px;margin-bottom:14px;opacity:.85}
+.room-title{
+  font-family:'Cinzel',serif;font-size:18px;color:var(--gold);
+  letter-spacing:4px;margin-bottom:6px;
+}
+.room-sub{font-size:15px;color:var(--text2);margin-bottom:24px;line-height:1.5}
+.room-input-wrap{position:relative;margin-bottom:10px}
+#room-code-input{
+  width:100%;background:var(--bg2);border:2px solid var(--border2);border-radius:var(--r);
+  padding:12px 14px;color:var(--gold2);
+  font-family:'Cinzel',serif;font-size:22px;font-weight:700;letter-spacing:8px;
+  text-align:center;text-transform:uppercase;outline:none;
+  transition:border-color .2s;
+}
+#room-code-input:focus{border-color:var(--golddim)}
+#room-code-input::placeholder{color:var(--text3);font-weight:400;font-size:14px;letter-spacing:3px}
+.room-hint{font-size:13px;color:var(--text3);margin-bottom:20px;min-height:16px}
+.room-new-badge{
+  display:inline-block;background:rgba(61,158,106,.15);border:1px solid rgba(61,158,106,.35);
+  color:var(--green);font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;
+  padding:3px 10px;border-radius:20px;margin-bottom:14px;
+}
+.room-back{
+  background:none;border:none;color:var(--text3);font-size:13px;
+  cursor:pointer;margin-top:10px;text-decoration:underline;text-underline-offset:3px;
+  font-family:'Crimson Text',serif;
+}
+.room-back:hover{color:var(--text2)}
+
+/* ── Room code badge in header ── */
+.hroom{
+  display:flex;align-items:center;gap:6px;padding:3px 10px;
+  background:rgba(201,168,76,.08);border:1px solid var(--golddim);border-radius:20px;
+  font-family:'Cinzel',serif;font-size:11px;color:var(--gold);
+  letter-spacing:3px;cursor:pointer;transition:background .2s;
+}
+.hroom:hover{background:rgba(201,168,76,.14)}
+.hroom-label{font-size:9px;color:var(--text3);letter-spacing:1px}
+
 /* ═══════════════ AUTH ═══════════════ */
 #auth-screen{
   position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
@@ -430,19 +487,31 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Crimso
       <button class="btn-primary" onclick="doLogin()">כניסה לחדר המשחק</button>
     </div>
     <div id="sf" style="display:none">
-      <div class="fg"><label>שם מציג / דמות</label><input type="text" id="sn" placeholder="Thorin Oakenshield"></div>
+      <div class="fg"><label>שם הדמות שלך</label><input type="text" id="sn" placeholder="Thorin Oakenshield"></div>
       <div class="fg"><label>אימייל</label><input type="email" id="se" placeholder="your@email.com" dir="ltr"></div>
       <div class="fg"><label>סיסמה</label><input type="password" id="sp" placeholder="••••••••" dir="ltr"></div>
-      <div class="fg">
-        <label>תפקיד</label>
-        <select id="sr">
-          <option value="player">שחקן</option>
-          <option value="dm">מאסטר המשחק (DM)</option>
-        </select>
-      </div>
       <button class="btn-primary" onclick="doSignup()">הצטרפות לאגדה</button>
     </div>
     <div class="auth-err" id="aerr"></div>
+  </div>
+</div>
+
+<!-- ══════════════ ROOM SCREEN ══════════════ -->
+<div id="room-screen">
+  <div class="room-card">
+    <div class="room-icon">🏰</div>
+    <div class="room-title">קוד חדר</div>
+    <p class="room-sub">הזן קוד חדר קיים להצטרפות<br>או צור חדר חדש עם קוד משלך</p>
+    <div class="room-input-wrap">
+      <input id="room-code-input" maxlength="8" placeholder="SAGA01"
+        onkeydown="if(event.key==='Enter')joinRoom()"
+        oninput="onRoomInput(this)">
+    </div>
+    <div class="room-hint" id="room-hint"></div>
+    <div id="room-new-badge" class="room-new-badge" style="display:none">✦ חדר חדש יווצר</div>
+    <button class="btn-primary" onclick="joinRoom()" id="room-btn">כניסה לחדר</button>
+    <br>
+    <button class="room-back" onclick="doLogout()">← חזרה / יציאה</button>
   </div>
 </div>
 
@@ -453,12 +522,14 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Crimso
   <div id="hdr">
     <span class="hlogo">⚔ CHRONICLE</span>
     <div class="hsep"></div>
-    <span style="font-family:'Cinzel',serif;font-size:9px;color:var(--text3);letter-spacing:3px">RPG COMMAND HUB</span>
+    <div class="hroom" onclick="copyRoomCode()" title="לחץ להעתקה">
+      <span class="hroom-label">חדר</span>
+      <span id="hroom-code">—</span>
+    </div>
     <div class="hsp"></div>
     <div class="ubadge">
       <div class="udot"></div>
       <span id="huname">—</span>
-      <span class="role-dm" id="hrole" style="display:none">DM</span>
     </div>
     <button class="ibtn" title="הגדרות" onclick="openSettings()">⚙</button>
     <button class="ibtn" title="יציאה" onclick="doLogout()" style="color:var(--ember2)">⏻</button>
@@ -472,7 +543,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Crimso
       <div class="ptabs">
         <button class="ptab active" id="pt-map"   onclick="ptab('map')">🗺 מפה</button>
         <button class="ptab"        id="pt-vault" onclick="ptab('vault')">📚 כספת</button>
-        <button class="ptab"        id="pt-dm"    onclick="ptab('dm')" style="display:none">⚔ לוח DM</button>
+        <button class="ptab"        id="pt-dm"    onclick="ptab('dm')">⚡ פקודות</button>
       </div>
 
       <!-- Map Tab -->
@@ -515,7 +586,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Crimso
         </div>
       </div>
 
-      <!-- DM Board Tab -->
+      <!-- Command Board Tab (everyone) -->
       <div id="tab-dm">
         <div class="dmsec">
           <div class="dmsec-t">🤖 כרוניקן AI</div>
@@ -531,10 +602,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Crimso
           <button class="dmbtn" onclick="loadCanvas()">📂 <span>טען מפה שמורה</span></button>
         </div>
         <div class="dmsec">
-          <div class="dmsec-t">⚔️ בקרת מערכה</div>
-          <button class="dmbtn" onclick="sysMsg('🔔 הפגישה מתחילה! ברוכים הבאים לשולחן.')">🔔 <span>פתיחת פגישה</span></button>
+          <div class="dmsec-t">📢 הודעות לקבוצה</div>
+          <button class="dmbtn" onclick="sysMsg('🔔 הפגישה מתחילה! ברוכים הבאים.')">🔔 <span>פתיחת פגישה</span></button>
           <button class="dmbtn" onclick="sysMsg('⏸️ הפסקה קצרה — 10 דקות')">⏸️ <span>הכרזת הפסקה</span></button>
-          <button class="dmbtn r" onclick="sysMsg('💀 GAME OVER — המערכה הסתיימה. תודה לכולם!')">💀 <span>סיום מערכה</span></button>
+          <button class="dmbtn r" onclick="sysMsg('🏁 הפגישה הסתיימה. תודה לכולם!')">🏁 <span>סיום פגישה</span></button>
         </div>
       </div>
     </div>
@@ -664,13 +735,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Crimso
       </div>
       <div class="stsec">
         <h4>👤 פרופיל</h4>
-        <label class="stlabel">שם מציג</label>
+        <label class="stlabel">שם הדמות</label>
         <input type="text" id="stname" class="stin" placeholder="שם הדמות שלך">
-        <label class="stlabel">תפקיד</label>
-        <select id="strole" class="stin" style="font-family:'Crimson Text',serif;font-size:16px">
-          <option value="player">שחקן</option>
-          <option value="dm">מאסטר המשחק (DM)</option>
-        </select>
       </div>
     </div>
     <div class="mfoot">
@@ -710,7 +776,7 @@ const auth = getAuth(app);
 const db   = getFirestore(app);
 
 /* ── App State ── */
-let cu = null, role = 'player', curCh = 'story', unsub = null;
+let cu = null, curCh = 'story', unsub = null, roomCode = null;
 let chroText = '', curTool = 'pencil';
 let drawing = false, lx = 0, ly = 0, sx = 0, sy = 0, snap = null;
 let canvas, ctx;
@@ -727,12 +793,11 @@ const CHS = {
 onAuthStateChanged(auth, async u => {
   if (u) {
     cu = u;
-    try {
-      const s = await getDoc(doc(db,'users',u.uid));
-      if (s.exists()) role = s.data().role || 'player';
-    } catch(e){}
-    showApp();
-  } else { cu=null; showAuth(); }
+    // If we already have a room code (e.g. page refresh), restore it
+    const saved = localStorage.getItem('roomCode_'+u.uid);
+    if(saved){ roomCode=saved; showApp(); }
+    else { showRoomScreen(); }
+  } else { cu=null; roomCode=null; showAuth(); }
 });
 
 window.doLogin = async () => {
@@ -743,18 +808,91 @@ window.doLogin = async () => {
 };
 
 window.doSignup = async () => {
-  const n=V('sn'),e=V('se'),p=V('sp'),r=V('sr',true),err=g('aerr');
+  const n=V('sn'),e=V('se'),p=V('sp'),err=g('aerr');
   err.textContent='';
   if(!n){err.textContent='נא להזין שם';return;}
   try {
     const c = await createUserWithEmailAndPassword(auth,e,p);
     await updateProfile(c.user,{displayName:n});
-    await setDoc(doc(db,'users',c.user.uid),{name:n,role:r,email:e,createdAt:serverTimestamp()});
-    role=r;
+    await setDoc(doc(db,'users',c.user.uid),{name:n,email:e,createdAt:serverTimestamp()});
   } catch(ex){ err.textContent=tae(ex.code); }
 };
 
-window.doLogout = async () => { if(unsub)unsub(); await signOut(auth); };
+window.doLogout = async () => {
+  if(unsub)unsub();
+  roomCode=null;
+  if(cu) localStorage.removeItem('roomCode_'+cu.uid);
+  await signOut(auth);
+};
+
+/* ── Room Screen ── */
+function showRoomScreen(){
+  g('auth-screen').style.display='none';
+  g('app').style.display='none';
+  g('room-screen').style.display='flex';
+  g('room-code-input').value='';
+  g('room-hint').textContent='';
+  g('room-new-badge').style.display='none';
+  setTimeout(()=>g('room-code-input').focus(),100);
+}
+
+window.onRoomInput = async (el) => {
+  const code = el.value.trim().toUpperCase();
+  el.value = code;
+  const hint = g('room-hint');
+  const badge = g('room-new-badge');
+  if(code.length < 3){ hint.textContent=''; badge.style.display='none'; return; }
+  try {
+    const s = await getDoc(doc(db,'rooms',code));
+    if(s.exists()){
+      hint.style.color='var(--green)';
+      hint.textContent=`✓ חדר "${code}" קיים — ${s.data().memberCount||1} משתתפים`;
+      badge.style.display='none';
+    } else {
+      hint.style.color='var(--gold)';
+      hint.textContent=`"${code}" — חדר חדש`;
+      badge.style.display='inline-block';
+    }
+  } catch(e){ hint.textContent=''; badge.style.display='none'; }
+};
+
+window.joinRoom = async () => {
+  const code = g('room-code-input').value.trim().toUpperCase();
+  if(!code || code.length < 2){ g('room-hint').style.color='var(--ember2)'; g('room-hint').textContent='נא להזין קוד חדר'; return; }
+  const btn = g('room-btn');
+  btn.textContent='...';btn.disabled=true;
+  try {
+    const roomRef = doc(db,'rooms',code);
+    const s = await getDoc(roomRef);
+    if(!s.exists()){
+      // Create new room
+      await setDoc(roomRef,{
+        createdBy: cu.displayName||cu.email,
+        createdAt: serverTimestamp(),
+        memberCount: 1,
+        code,
+      });
+      toast(`חדר "${code}" נוצר! שתף את הקוד עם חבריך 🎲`);
+    } else {
+      toast(`ברוך הבא לחדר "${code}"! 🏰`);
+    }
+    // Save room to user doc & localStorage
+    roomCode = code;
+    localStorage.setItem('roomCode_'+cu.uid, code);
+    await setDoc(doc(db,'users',cu.uid),{currentRoom:code},{merge:true});
+    g('room-screen').style.display='none';
+    showApp();
+  } catch(e){
+    g('room-hint').style.color='var(--ember2)';
+    g('room-hint').textContent='שגיאה: '+e.message;
+  }
+  btn.textContent='כניסה לחדר'; btn.disabled=false;
+};
+
+window.copyRoomCode = () => {
+  if(!roomCode)return;
+  navigator.clipboard.writeText(roomCode).then(()=>toast(`קוד החדר "${roomCode}" הועתק! 📋`));
+};
 
 function tae(c){
   return ({
@@ -769,14 +907,14 @@ function tae(c){
 
 function showApp(){
   g('auth-screen').style.display='none';
+  g('room-screen').style.display='none';
   const a=g('app'); a.style.display='flex';
   setTimeout(()=>a.classList.add('on'),10);
   const nm = cu.displayName||cu.email;
   g('huname').textContent=nm;
   g('ome').textContent=nm;
-  if(role==='dm'){g('hrole').style.display='inline';g('pt-dm').style.display='inline-block';}
+  g('hroom-code').textContent=roomCode||'—';
   g('stname').value=nm;
-  g('strole').value=role;
   g('akey').value=localStorage.getItem('akey')||'';
   initCanvas();
   swch('story');
@@ -804,7 +942,7 @@ window.swch = ch => {
   g('acd').textContent='· '+i.desc;
   g('chro-ch-name').textContent=i.name;
   g('msgs').innerHTML=`<div class="sysmsg">─ ${i.icon} ${i.name} ─</div>`;
-  const q=query(collection(db,'channels',ch,'messages'),orderBy('createdAt','asc'),limit(100));
+  const q=query(collection(db,'rooms',roomCode,'channels',ch,'messages'),orderBy('createdAt','asc'),limit(100));
   unsub=onSnapshot(q,snap=>{
     snap.docChanges().forEach(c=>{ if(c.type==='added') renderMsg(c.doc.data(),ch); });
     stb();
@@ -822,7 +960,7 @@ function renderMsg(d,ch){
   const t=d.createdAt?.toDate?d.createdAt.toDate().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}):new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
   const div=document.createElement('div');
   div.className=`msg${own?' own':''}${ch==='story'?' sc':''}`;
-  div.innerHTML=`<div class="mm"><span class="ma ${d.role||'player'}">${esc(d.authorName||'אנונימי')}</span><span class="mt">${t}</span></div><div class="mb">${esc(d.text||'')}</div>`;
+  div.innerHTML=`<div class="mm"><span class="ma player">${esc(d.authorName||'אנונימי')}</span><span class="mt">${t}</span></div><div class="mb">${esc(d.text||'')}</div>`;
   el.appendChild(div);
 }
 function stb(){const e=g('msgs');e.scrollTop=e.scrollHeight;}
@@ -834,9 +972,9 @@ window.sendMsg = async () => {
   if(!text)return;
   el.value='';el.style.height='';
   try {
-    await addDoc(collection(db,'channels',curCh,'messages'),{
+    await addDoc(collection(db,'rooms',roomCode,'channels',curCh,'messages'),{
       text,uid:cu.uid,authorName:cu.displayName||cu.email,
-      role,createdAt:serverTimestamp(),channel:curCh,
+      createdAt:serverTimestamp(),channel:curCh,
     });
   } catch(e){toast('שגיאה בשליחה');}
 };
@@ -844,7 +982,7 @@ window.sendMsg = async () => {
 window.sysMsg = async txt => {
   if(!cu)return;
   try {
-    await addDoc(collection(db,'channels',curCh,'messages'),{
+    await addDoc(collection(db,'rooms',roomCode,'channels',curCh,'messages'),{
       text:txt,type:'system',uid:cu.uid,createdAt:serverTimestamp(),
     });
     toast('הודעת מערכת נשלחה ✓');
@@ -954,14 +1092,14 @@ window.saveCanvas = async () => {
   if(!cu)return;
   try {
     const d=canvas.toDataURL('image/png');
-    await setDoc(doc(db,'canvas','current'),{data:d,savedBy:cu.displayName||cu.email,savedAt:serverTimestamp()});
+    await setDoc(doc(db,'rooms',roomCode,'canvas','current'),{data:d,savedBy:cu.displayName||cu.email,savedAt:serverTimestamp()});
     toast('המפה נשמרה ✓');
   } catch(e){toast('שגיאה בשמירה');}
 };
 
 window.loadCanvas = async () => {
   try {
-    const s=await getDoc(doc(db,'canvas','current'));
+    const s=await getDoc(doc(db,'rooms',roomCode,'canvas','current'));
     if(s.exists()&&s.data().data){
       const img=new Image();img.onload=()=>ctx.drawImage(img,0,0);img.src=s.data().data;
     }
@@ -994,7 +1132,7 @@ window.runChro = async () => {
   // Gather messages
   let msgs=[];
   try {
-    const q=query(collection(db,'channels',curCh,'messages'),orderBy('createdAt','asc'),limit(60));
+    const q=query(collection(db,'rooms',roomCode,'channels',curCh,'messages'),orderBy('createdAt','asc'),limit(60));
     const sn=await getDocs(q);
     msgs=sn.docs.map(d=>d.data()).filter(d=>d.text&&d.type!=='system').map(d=>`[${d.authorName||'אנונימי'}]: ${d.text}`);
   } catch(e){}
@@ -1039,7 +1177,7 @@ window.saveVault = async () => {
   const type=g('chro-type').value;
   const types={story:'עלילה',battle:'קרב',lore:'לור',recap:'תקציר'};
   try {
-    await addDoc(collection(db,'vault'),{
+    await addDoc(collection(db,'rooms',roomCode,'vault'),{
       text:chroText,type,typeName:types[type],
       channel:curCh,channelName:CHS[curCh].name,
       createdBy:cu.displayName||cu.email,
@@ -1055,7 +1193,7 @@ window.saveVault = async () => {
 /* ── Vault ── */
 async function loadVault(){
   try {
-    const q=query(collection(db,'vault'),orderBy('createdAt','desc'),limit(20));
+    const q=query(collection(db,'rooms',roomCode,'vault'),orderBy('createdAt','desc'),limit(20));
     const sn=await getDocs(q);
     const list=g('vlist'),empty=g('vempty');
     list.querySelectorAll('.vi').forEach(el=>el.remove());
@@ -1092,17 +1230,13 @@ window.openSettings = () => {
 window.saveSettings = async () => {
   const key=g('akey').value.trim();
   const name=g('stname').value.trim();
-  const r=g('strole').value;
   if(key) localStorage.setItem('akey',key);
   if(cu&&name){
     try{
       await updateProfile(cu,{displayName:name});
-      await setDoc(doc(db,'users',cu.uid),{name,role:r},{merge:true});
-      role=r;
+      await setDoc(doc(db,'users',cu.uid),{name},{merge:true});
       g('huname').textContent=name;
       g('ome').textContent=name;
-      g('hrole').style.display=r==='dm'?'inline':'none';
-      g('pt-dm').style.display=r==='dm'?'inline-block':'none';
     }catch(e){}
   }
   closeM('mset');
