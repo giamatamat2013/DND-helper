@@ -213,6 +213,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Crimso
   display:flex;align-items:center;gap:3px;padding:5px 8px;flex-wrap:wrap;
   background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;
 }
+.ctbar+.ctbar{
+  background:rgba(12,16,25,.6);border-bottom-color:var(--border);padding-top:4px;padding-bottom:4px;
+}
 .tbtn{
   padding:3px 9px;background:var(--bg2);border:1px solid var(--border);
   border-radius:4px;color:var(--text2);font-size:12px;cursor:pointer;
@@ -564,10 +567,26 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Crimso
             <option value="14">עבה+</option>
           </select>
           <div class="tsep"></div>
-          <button class="tbtn" onclick="clearCanvas()" title="נקה" style="color:var(--ember2)">🗑</button>
+          <button class="tbtn" onclick="clearCanvas()" title="נקה ציורים" style="color:var(--ember2)">🗑</button>
           <button class="tbtn" onclick="saveCanvas()" title="שמור" style="color:var(--green)">💾</button>
           <button class="tbtn" onclick="loadCanvas()" title="טען" style="color:var(--gold)">📂</button>
         </div>
+        <!-- Second toolbar row: map uploads -->
+        <div class="ctbar" style="border-top:none;padding-top:0;gap:5px">
+          <button class="tbtn" onclick="g('inp-bg').click()" title="העלה תמונה שתהיה רקע המפה" style="color:var(--gold);gap:5px">
+            🗺️ <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px">העלה מפת רקע</span>
+          </button>
+          <button class="tbtn" onclick="g('inp-upd').click()" title="העלה עדכון שיתווסף מעל המפה הנוכחית" style="color:#7ec8a0;gap:5px">
+            🔄 <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px">עדכן מפה</span>
+          </button>
+          <button class="tbtn" onclick="clearBg()" title="מחק מפת רקע" style="color:var(--text3);gap:4px">
+            ✕ <span style="font-family:'Cinzel',serif;font-size:10px">רקע</span>
+          </button>
+          <span id="bg-name" style="font-family:'Cinzel',serif;font-size:9px;color:var(--text3);letter-spacing:1px;margin-right:auto"></span>
+        </div>
+        <!-- Hidden file inputs -->
+        <input type="file" id="inp-bg"  accept="image/*" style="display:none" onchange="uploadBg(this)">
+        <input type="file" id="inp-upd" accept="image/*" style="display:none" onchange="uploadUpdate(this)">
         <div id="cwrap"><canvas id="mc"></canvas></div>
       </div>
 
@@ -778,6 +797,7 @@ let cu = null, curCh = 'story', unsub = null, roomCode = null;
 let chroText = '', curTool = 'pencil';
 let drawing = false, lx = 0, ly = 0, sx = 0, sy = 0, snap = null;
 let canvas, ctx;
+let bgImage = null; // background map image element
 
 const CHS = {
   story:{ icon:'⚔️', name:'עלילה',       desc:'ערוץ הסיפור הראשי' },
@@ -1006,9 +1026,13 @@ function initCanvas(){
   canvas=g('mc');ctx=canvas.getContext('2d');
   const rz=()=>{
     const w=g('cwrap');
+    // Save current drawings before resize
     const id=canvas.width>0?ctx.getImageData(0,0,canvas.width,canvas.height):null;
     canvas.width=w.clientWidth;canvas.height=w.clientHeight;
-    setCD();if(id)ctx.putImageData(id,0,0);
+    // Redraw background first, then drawings on top
+    if(bgImage) ctx.drawImage(bgImage,0,0,canvas.width,canvas.height);
+    setCD();
+    if(id) ctx.putImageData(id,0,0);
   };
   rz();
   new ResizeObserver(rz).observe(g('cwrap'));
@@ -1084,27 +1108,111 @@ window.setTool = t => {
 };
 
 window.clearCanvas = () => {
-  if(confirm('למחוק את כל הציורים על הלוח?')){
-    ctx.clearRect(0,0,canvas.width,canvas.height);toast('הלוח נוקה ✓');
+  if(confirm('למחוק את כל הציורים? (הרקע יישמר)')){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    if(bgImage) ctx.drawImage(bgImage,0,0,canvas.width,canvas.height);
+    toast('הציורים נוקו ✓');
   }
 };
 
+/* ── Save: stores bg + composite separately ── */
 window.saveCanvas = async () => {
   if(!cu)return;
   try {
-    const d=canvas.toDataURL('image/png');
-    await setDoc(doc(db,'rooms',roomCode,'canvas','current'),{data:d,savedBy:cu.displayName||cu.email,savedAt:serverTimestamp()});
-    toast('המפה נשמרה ✓');
-  } catch(e){toast('שגיאה בשמירה');}
+    const composite = canvas.toDataURL('image/png');
+    const bgData    = bgImage ? bgImage.src : null;
+    await setDoc(doc(db,'rooms',roomCode,'canvas','current'),{
+      data: composite,
+      bg:   bgData,
+      bgName: g('bg-name').textContent||'',
+      savedBy: cu.displayName||cu.email,
+      savedAt: serverTimestamp(),
+    });
+    toast('המפה נשמרה לכולם ✓');
+  } catch(e){toast('שגיאה בשמירה: '+e.message);}
 };
 
+/* ── Load: restores bg then drawings ── */
 window.loadCanvas = async () => {
   try {
     const s=await getDoc(doc(db,'rooms',roomCode,'canvas','current'));
-    if(s.exists()&&s.data().data){
-      const img=new Image();img.onload=()=>ctx.drawImage(img,0,0);img.src=s.data().data;
+    if(!s.exists()) return;
+    const d=s.data();
+    // First restore background if exists
+    if(d.bg){
+      bgImage=new Image();
+      bgImage.onload=()=>{
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(bgImage,0,0,canvas.width,canvas.height);
+        // Then overlay composite drawings
+        if(d.data){
+          const top=new Image();
+          top.onload=()=>ctx.drawImage(top,0,0,canvas.width,canvas.height);
+          top.src=d.data;
+        }
+        if(d.bgName) g('bg-name').textContent=d.bgName;
+      };
+      bgImage.src=d.bg;
+    } else if(d.data){
+      const img=new Image();
+      img.onload=()=>ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      img.src=d.data;
     }
   } catch(e){}
+};
+
+/* ── Upload background map ── */
+window.uploadBg = (input) => {
+  const file=input.files[0];
+  if(!file)return;
+  // Compress if large
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      bgImage=img;
+      // Redraw: bg first then clear drawings above
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(bgImage,0,0,canvas.width,canvas.height);
+      g('bg-name').textContent=file.name;
+      toast(`מפת רקע הועלתה: ${file.name} 🗺️`);
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value=''; // reset so same file can be re-uploaded
+};
+
+/* ── Upload map update (composited on top) ── */
+window.uploadUpdate = (input) => {
+  const file=input.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      // Draw update layer on top of everything
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      toast(`עדכון מפה הוחל: ${file.name} 🔄`);
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value='';
+};
+
+/* ── Clear background only ── */
+window.clearBg = () => {
+  if(!bgImage){toast('אין מפת רקע');return;}
+  if(confirm('למחוק את מפת הרקע? הציורים יישמרו.')){
+    bgImage=null;
+    g('bg-name').textContent='';
+    // Redraw without bg — save current drawings as imagedata first
+    const id=ctx.getImageData(0,0,canvas.width,canvas.height);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.putImageData(id,0,0);
+    toast('מפת הרקע הוסרה ✓');
+  }
 };
 
 /* ── Chronicler ── */
