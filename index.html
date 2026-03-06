@@ -2,1214 +2,2311 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🗺️ RPG Storytelling Hub — Project Canvas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>⚔ RPG Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #0a0804;
-    --parchment: #f5e6c8;
-    --aged: #c9a96e;
-    --amber: #e8a020;
-    --ember: #c0392b;
-    --rune: #5b8a6e;
-    --steel: #8ba0b4;
-    --glow: #e8a02055;
-    --void: #080604;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background-color: var(--void);
-    color: var(--parchment);
-    font-family: 'IM Fell English', serif;
-    font-size: 16px;
-    line-height: 1.75;
-    overflow-x: hidden;
-  }
-
-  /* ── NOISE OVERLAY ── */
-  body::before {
-    content: '';
-    position: fixed; inset: 0; z-index: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    background-size: 200px;
-    opacity: 0.35;
-    pointer-events: none;
-  }
-
-  /* ── HERO ── */
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center;
-    padding: 3rem 2rem;
-    overflow: hidden;
-  }
-
-  .hero-bg {
-    position: absolute; inset: 0; z-index: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 50% 40%, #1a0e0455 0%, transparent 70%),
-      radial-gradient(ellipse 50% 80% at 20% 80%, #5b1a0a22 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 20%, #0a1a2a33 0%, transparent 60%),
-      #080604;
-  }
-
-  .rune-ring {
-    position: absolute;
-    width: 600px; height: 600px;
-    border: 1px solid #e8a02015;
-    border-radius: 50%;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    animation: spin 40s linear infinite;
-  }
-
-  .rune-ring::before {
-    content: '⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈';
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 600px;
-    transform: translate(-50%, -50%);
-    font-size: 10px;
-    color: #e8a02025;
-    letter-spacing: 8px;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  .rune-ring-2 {
-    width: 480px; height: 480px;
-    animation: spin 25s linear infinite reverse;
-    border-color: #5b8a6e12;
-  }
-
-  @keyframes spin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
-
-  .hero-content { position: relative; z-index: 1; max-width: 900px; }
-
-  .sigil {
-    font-size: 4rem;
-    margin-bottom: 1.5rem;
-    filter: drop-shadow(0 0 30px #e8a02066);
-    animation: pulse 3s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%,100% { filter: drop-shadow(0 0 30px #e8a02066); }
-    50% { filter: drop-shadow(0 0 60px #e8a020aa); }
-  }
-
-  h1.title {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(1.8rem, 4vw, 3.2rem);
-    font-weight: 900;
-    color: var(--amber);
-    text-shadow: 0 0 40px #e8a02055, 0 2px 0 #5b3000;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
-    line-height: 1.2;
-  }
-
-  h2.subtitle {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(0.85rem, 1.5vw, 1.1rem);
-    font-weight: 400;
-    color: var(--steel);
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    margin-bottom: 2rem;
-  }
-
-  .hero-tagline {
-    font-size: 1.05rem;
-    color: #c9a96ecc;
-    max-width: 600px;
-    margin: 0 auto 3rem;
-    font-style: italic;
-  }
-
-  .scroll-indicator {
-    position: absolute;
-    bottom: 2.5rem; left: 50%;
-    transform: translateX(-50%);
-    color: #e8a02055;
-    font-size: 1.5rem;
-    animation: bounce 2s ease-in-out infinite;
-  }
-  @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
-
-  /* ── DIVIDER ── */
-  .divider {
-    display: flex; align-items: center;
-    gap: 1.5rem;
-    margin: 0 auto;
-    max-width: 800px;
-    padding: 0 2rem;
-  }
-  .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--amber), transparent); }
-  .divider-gem { color: var(--amber); font-size: 1.2rem; flex-shrink: 0; }
-
-  /* ── SECTION ── */
-  section {
-    position: relative;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 5rem 2rem;
-    z-index: 1;
-  }
-
-  .section-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--rune);
-    margin-bottom: 0.5rem;
-  }
-
-  .section-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    font-weight: 700;
-    color: var(--amber);
-    margin-bottom: 1rem;
-    text-shadow: 0 0 20px #e8a02033;
-  }
-
-  .section-desc {
-    color: #c9a96ecc;
-    max-width: 680px;
-    margin-bottom: 3rem;
-    font-size: 1rem;
-    font-style: italic;
-  }
-
-  /* ── VISION BLOCK ── */
-  .vision-block {
-    background: linear-gradient(135deg, #12090488 0%, #08100c55 100%);
-    border: 1px solid #e8a02022;
-    border-radius: 2px;
-    padding: 2.5rem 3rem;
-    position: relative;
-    margin-bottom: 4rem;
-  }
-
-  .vision-block::before, .vision-block::after {
-    content: '✦';
-    position: absolute;
-    color: var(--amber);
-    font-size: 1.2rem;
-    opacity: 0.6;
-  }
-  .vision-block::before { top: -0.65rem; left: 1.5rem; background: var(--void); padding: 0 0.5rem; }
-  .vision-block::after { bottom: -0.65rem; right: 1.5rem; background: var(--void); padding: 0 0.5rem; }
-
-  .vision-block p {
-    font-size: 1.1rem;
-    line-height: 2;
-    color: var(--parchment);
-  }
-
-  /* ── PILLARS GRID ── */
-  .pillars-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.5px;
-    background: #e8a02015;
-    border: 1px solid #e8a02022;
-    margin-bottom: 4rem;
-    overflow: hidden;
-  }
-
-  .pillar-card {
-    background: #09060388;
-    padding: 2.2rem 1.8rem;
-    position: relative;
-    cursor: default;
-    transition: background 0.3s;
-  }
-
-  .pillar-card:hover { background: #120a0599; }
-
-  .pillar-icon {
-    font-size: 2.2rem;
-    margin-bottom: 1rem;
-    display: block;
-    filter: drop-shadow(0 0 10px currentColor);
-  }
-
-  .pillar-num {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
-    color: var(--rune);
-    margin-bottom: 0.4rem;
-  }
-
-  .pillar-title {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--amber);
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #e8a02022;
-    padding-bottom: 0.8rem;
-  }
-
-  .pillar-items { list-style: none; }
-  .pillar-items li {
-    font-size: 0.88rem;
-    color: #c9a96edd;
-    padding: 0.3rem 0;
-    padding-right: 1.2rem;
-    position: relative;
-  }
-  .pillar-items li::before {
-    content: '▸';
-    position: absolute;
-    right: 0;
-    color: var(--rune);
-  }
-
-  /* ── DATA FLOW ── */
-  .flow-container {
-    display: flex;
-    gap: 0;
-    align-items: stretch;
-    overflow-x: auto;
-    margin-bottom: 4rem;
-    scrollbar-width: thin;
-    scrollbar-color: #e8a02033 transparent;
-  }
-
-  .flow-step {
-    flex: 1;
-    min-width: 180px;
-    background: #09060388;
-    border: 1px solid #e8a02018;
-    padding: 1.8rem 1.5rem;
-    position: relative;
-    text-align: center;
-  }
-
-  .flow-step + .flow-step {
-    border-right: none;
-  }
-
-  .flow-step:first-child { border-right: none; }
-
-  .flow-arrow {
-    position: absolute;
-    left: -20px; top: 50%;
-    transform: translateY(-50%);
-    color: var(--amber);
-    font-size: 1.5rem;
-    z-index: 2;
-  }
-
-  .flow-num {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--rune);
-    letter-spacing: 0.2em;
-    margin-bottom: 0.8rem;
-  }
-
-  .flow-icon { font-size: 2rem; margin-bottom: 0.8rem; display: block; }
-
-  .flow-title {
-    font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
-    color: var(--amber);
-    font-weight: 600;
-    margin-bottom: 0.6rem;
-  }
-
-  .flow-desc {
-    font-size: 0.8rem;
-    color: #c9a96ebb;
-    font-style: italic;
-  }
-
-  /* ── API CONFIG TABLE ── */
-  .api-section {
-    background: #09060388;
-    border: 1px solid #5b8a6e33;
-    padding: 2.5rem;
-    margin-bottom: 2rem;
-    position: relative;
-  }
-
-  .api-section-title {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    color: var(--rune);
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-  }
-
-  .api-section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to left, transparent, #5b8a6e44);
-  }
-
-  .api-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85rem;
-  }
-
-  .api-table th {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    color: var(--steel);
-    text-align: right;
-    padding: 0.6rem 1rem;
-    border-bottom: 1px solid #e8a02020;
-    text-transform: uppercase;
-  }
-
-  .api-table td {
-    padding: 0.8rem 1rem;
-    border-bottom: 1px solid #ffffff08;
-    vertical-align: top;
-  }
-
-  .api-table tr:last-child td { border-bottom: none; }
-  .api-table tr:hover td { background: #ffffff04; }
-
-  .api-name {
-    font-family: 'Share Tech Mono', monospace;
-    color: var(--amber);
-    font-size: 0.82rem;
-    white-space: nowrap;
-  }
-
-  .api-purpose { color: var(--parchment); }
-  .api-tier { color: #c9a96e; font-style: italic; font-size: 0.8rem; }
-
-  .badge {
-    display: inline-block;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.15em;
-    padding: 0.2rem 0.6rem;
-    border-radius: 1px;
-    text-transform: uppercase;
-  }
-
-  .badge-free { background: #5b8a6e22; color: var(--rune); border: 1px solid #5b8a6e44; }
-  .badge-paid { background: #c0392b22; color: #e74c3c; border: 1px solid #c0392b44; }
-  .badge-key  { background: #e8a02022; color: var(--amber); border: 1px solid #e8a02044; }
-  .badge-optional { background: #8ba0b422; color: var(--steel); border: 1px solid #8ba0b444; }
-
-  /* ── ENV BLOCK ── */
-  .env-block {
-    background: #030201;
-    border: 1px solid #5b8a6e33;
-    border-radius: 1px;
-    padding: 1.5rem 2rem;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.8rem;
-    line-height: 2;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .env-block::before {
-    content: '.env.example';
-    position: absolute;
-    top: 0.6rem; left: 1.5rem;
-    font-size: 0.65rem;
-    color: var(--rune);
-    letter-spacing: 0.2em;
-  }
-
-  .env-block pre { margin-top: 1.5rem; }
-
-  .env-comment { color: #5b8a6e99; }
-  .env-key { color: var(--amber); }
-  .env-val { color: var(--steel); }
-  .env-placeholder { color: #c0392b88; }
-
-  /* ── UI LAYOUT DIAGRAM ── */
-  .ui-diagram {
-    border: 1px solid #e8a02022;
-    background: #09060388;
-    padding: 1.5rem;
-    margin-bottom: 3rem;
-    position: relative;
-  }
-
-  .ui-diagram-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--steel);
-    letter-spacing: 0.2em;
-    margin-bottom: 1rem;
-  }
-
-  .ui-layout {
-    display: grid;
-    grid-template-columns: 1fr 1px 1fr;
-    gap: 0;
-    min-height: 280px;
-    border: 1px solid #e8a02015;
-  }
-
-  .ui-pane {
-    padding: 1.2rem;
-    position: relative;
-  }
-
-  .ui-pane-title {
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    color: var(--amber);
-    letter-spacing: 0.15em;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    border-bottom: 1px dashed #e8a02022;
-    padding-bottom: 0.5rem;
-  }
-
-  .ui-divider { background: #e8a02020; }
-
-  .mock-chat {
-    display: flex; flex-direction: column; gap: 0.6rem;
-  }
-
-  .mock-msg {
-    background: #ffffff08;
-    border-radius: 1px;
-    padding: 0.5rem 0.8rem;
-    font-size: 0.72rem;
-    color: #c9a96ecc;
-  }
-
-  .mock-msg.mine {
-    background: #5b8a6e18;
-    text-align: left;
-    border-right: 2px solid var(--rune);
-  }
-
-  .mock-msg .sender {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--amber);
-    margin-bottom: 0.2rem;
-    display: block;
-  }
-
-  .mock-map {
-    border: 1px dashed #e8a02025;
-    height: 120px;
-    display: flex; align-items: center; justify-content: center;
-    color: #e8a02033;
-    font-size: 2.5rem;
-    margin-bottom: 0.8rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .mock-map::before {
-    content: '';
-    position: absolute; inset: 0;
-    background-image: 
-      linear-gradient(#e8a02008 1px, transparent 1px),
-      linear-gradient(90deg, #e8a02008 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
-  .mock-dot {
-    position: absolute;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--amber);
-    box-shadow: 0 0 8px var(--amber);
-    animation: pulse 2s ease-in-out infinite;
-  }
-  .mock-dot:nth-child(2) { top: 30%; left: 40%; animation-delay: 0.5s; background: var(--rune); }
-  .mock-dot:nth-child(3) { top: 60%; left: 65%; animation-delay: 1s; background: #e74c3c; }
-
-  /* ── FUTURE ITEMS ── */
-  .future-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem;
-    margin-bottom: 3rem;
-  }
-
-  .future-card {
-    border: 1px solid #e8a02015;
-    background: #09060355;
-    padding: 1.5rem;
-    position: relative;
-    transition: border-color 0.3s;
-  }
-
-  .future-card:hover { border-color: #e8a02044; }
-
-  .future-tag {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--steel);
-    letter-spacing: 0.25em;
-    margin-bottom: 0.5rem;
-  }
-
-  .future-title {
-    font-family: 'Cinzel', serif;
-    font-size: 0.95rem;
-    color: var(--amber);
-    margin-bottom: 0.5rem;
-  }
-
-  .future-desc {
-    font-size: 0.85rem;
-    color: #c9a96ecc;
-    font-style: italic;
-  }
-
-  /* ── FOOTER ── */
-  footer {
-    position: relative; z-index: 1;
-    border-top: 1px solid #e8a02015;
-    padding: 3rem 2rem;
-    text-align: center;
-    color: #c9a96e55;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-  }
-
-  footer .glyphs {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    color: #e8a02022;
-    letter-spacing: 0.5em;
-  }
-
-  /* ── STICKY NAV ── */
-  nav {
-    position: fixed;
-    top: 0; right: 0; left: 0;
-    z-index: 100;
-    background: #08060388;
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid #e8a02015;
-    padding: 0.8rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    transform: translateY(-100%);
-    transition: transform 0.3s;
-  }
-
-  nav.visible { transform: translateY(0); }
-
-  .nav-brand {
-    font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
-    color: var(--amber);
-    white-space: nowrap;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 1.5rem;
-    list-style: none;
-    flex-wrap: wrap;
-  }
-
-  .nav-links a {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    color: var(--steel);
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-
-  .nav-links a:hover { color: var(--amber); }
-
-  /* ── STATUS CHIPS ── */
-  .status-row {
-    display: flex;
-    gap: 0.8rem;
-    flex-wrap: wrap;
-    margin-bottom: 2rem;
-  }
-
-  .status-chip {
-    display: flex; align-items: center; gap: 0.5rem;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    padding: 0.35rem 0.9rem;
-    border: 1px solid #e8a02025;
-    color: var(--aged);
-    text-transform: uppercase;
-  }
-
-  .status-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--rune);
-    box-shadow: 0 0 6px var(--rune);
-    animation: pulse 2s infinite;
-  }
-
-  .status-dot.warn { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
-  .status-dot.danger { background: #e74c3c; box-shadow: 0 0 6px #e74c3c; animation: none; }
-
-  @media (max-width: 600px) {
-    .pillars-grid { grid-template-columns: 1fr; }
-    .flow-container { flex-direction: column; }
-    .flow-arrow { display: none; }
-    .ui-layout { grid-template-columns: 1fr; }
-    .ui-divider { display: none; }
-    .api-table td:nth-child(3) { display: none; }
-  }
+/* ─────────────────────────────────────────
+   ROOT TOKENS
+───────────────────────────────────────── */
+:root {
+  --bg:       #090705;
+  --surf:     #110d0a;
+  --surf2:    #1a1410;
+  --border:   #2c2018;
+  --border2:  #3d2e1e;
+  --amber:    #c87820;
+  --amber2:   #e8a030;
+  --ember:    #8b1a0a;
+  --rune:     #3d6b52;
+  --steel:    #607080;
+  --parch:    #d8c8a0;
+  --parch2:   #ede0c0;
+  --text:     #b8a880;
+  --text2:    #8a7860;
+  --glow:     rgba(200,120,32,0.15);
+  --red:      #c0392b;
+  --font-h:   'Cinzel', serif;
+  --font-b:   'Crimson Pro', serif;
+  --font-m:   'Share Tech Mono', monospace;
+  --radius:   2px;
+}
+
+/* ─────────────────────────────────────────
+   RESET & BASE
+───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-b);
+  font-size: 15px;
+  line-height: 1.6;
+}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--surf); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--amber); }
+button { cursor: pointer; font-family: inherit; }
+input, textarea { font-family: inherit; }
+a { color: var(--amber); text-decoration: none; }
+
+/* ─────────────────────────────────────────
+   TYPOGRAPHY HELPERS
+───────────────────────────────────────── */
+.h-font { font-family: var(--font-h); }
+.mono   { font-family: var(--font-m); }
+.label  { font-family: var(--font-m); font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--steel); }
+
+/* ─────────────────────────────────────────
+   SCREENS (setup / login / app)
+───────────────────────────────────────── */
+.screen { display: none; width: 100%; height: 100%; }
+.screen.active { display: flex; }
+
+/* ─────────────────────────────────────────
+   SETUP SCREEN
+───────────────────────────────────────── */
+#setup-screen {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, #1a0e0555 0%, transparent 70%), var(--bg);
+  overflow-y: auto;
+  padding: 2rem;
+}
+.setup-box {
+  background: var(--surf);
+  border: 1px solid var(--border2);
+  max-width: 560px;
+  width: 100%;
+  padding: 2.5rem;
+  position: relative;
+}
+.setup-box::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, var(--amber)44, transparent 40%, transparent 60%, var(--rune)33);
+  z-index: -1;
+}
+.setup-title {
+  font-family: var(--font-h);
+  font-size: 1.4rem;
+  color: var(--amber);
+  margin-bottom: 0.3rem;
+  text-shadow: 0 0 20px var(--amber)55;
+}
+.setup-sub {
+  font-size: 0.85rem;
+  color: var(--text2);
+  font-style: italic;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.setup-group { margin-bottom: 1.2rem; }
+.setup-group label {
+  display: block;
+  font-family: var(--font-m);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--steel);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.setup-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  color: var(--parch);
+  padding: 0.55rem 0.8rem;
+  font-family: var(--font-m);
+  font-size: 0.82rem;
+  outline: none;
+  transition: border-color 0.2s;
+  border-radius: var(--radius);
+}
+.setup-input:focus { border-color: var(--amber); }
+.setup-section-title {
+  font-family: var(--font-h);
+  font-size: 0.78rem;
+  color: var(--amber);
+  margin: 1.8rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.optional-tag {
+  font-family: var(--font-m);
+  font-size: 0.6rem;
+  color: var(--steel);
+  border: 1px solid var(--border2);
+  padding: 0.1rem 0.4rem;
+  letter-spacing: 0.15em;
+}
+.setup-note {
+  background: #c8782010;
+  border: 1px solid #c8782033;
+  padding: 0.8rem 1rem;
+  font-size: 0.82rem;
+  color: #c9a060;
+  margin: 1.2rem 0;
+  font-style: italic;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-h);
+  font-size: 0.78rem;
+  letter-spacing: 0.15em;
+  padding: 0.65rem 1.6rem;
+  border: 1px solid;
+  border-radius: var(--radius);
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+.btn-primary {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: #0c0704;
+  font-weight: 700;
+}
+.btn-primary:hover { background: var(--amber2); border-color: var(--amber2); box-shadow: 0 0 20px var(--amber)55; }
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border2);
+  color: var(--text);
+}
+.btn-ghost:hover { border-color: var(--amber); color: var(--amber); }
+.btn-rune {
+  background: transparent;
+  border-color: var(--rune);
+  color: var(--rune);
+}
+.btn-rune:hover { background: var(--rune)22; }
+.btn-danger {
+  background: transparent;
+  border-color: var(--red);
+  color: var(--red);
+}
+.btn-danger:hover { background: var(--red)22; }
+
+/* ─────────────────────────────────────────
+   LOGIN SCREEN
+───────────────────────────────────────── */
+#login-screen {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, #1a0e0566 0%, transparent 70%), var(--bg);
+}
+.login-box {
+  text-align: center;
+  max-width: 380px;
+  padding: 3rem 2.5rem;
+  background: var(--surf);
+  border: 1px solid var(--border2);
+  position: relative;
+}
+.login-sigil { font-size: 3.5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 20px var(--amber)66); animation: glow-pulse 3s ease-in-out infinite; }
+@keyframes glow-pulse { 0%,100% { filter: drop-shadow(0 0 20px var(--amber)66); } 50% { filter: drop-shadow(0 0 40px var(--amber)aa); } }
+.login-title { font-family: var(--font-h); font-size: 1.6rem; color: var(--amber); text-shadow: 0 0 30px var(--amber)44; }
+.login-sub { font-style: italic; color: var(--text2); font-size: 0.9rem; margin: 0.5rem 0 2rem; }
+.btn-google {
+  width: 100%;
+  background: #fff;
+  border: none;
+  color: #333;
+  font-family: var(--font-m);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  padding: 0.75rem 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+  transition: opacity 0.2s;
+  border-radius: var(--radius);
+}
+.btn-google:hover { opacity: 0.9; }
+.btn-demo {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  font-family: var(--font-m);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.6rem;
+  transition: all 0.2s;
+  border-radius: var(--radius);
+}
+.btn-demo:hover { border-color: var(--rune); color: var(--rune); }
+.login-reconfigure { margin-top: 1.5rem; }
+
+/* ─────────────────────────────────────────
+   APP SCREEN — LAYOUT
+───────────────────────────────────────── */
+#app-screen { flex-direction: column; }
+
+.top-bar {
+  height: 48px;
+  min-height: 48px;
+  background: var(--surf);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 0.8rem;
+  gap: 0.5rem;
+  z-index: 50;
+}
+
+.top-logo {
+  font-family: var(--font-h);
+  font-size: 0.9rem;
+  color: var(--amber);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-left: 0.4rem;
+  border-left: 2px solid var(--amber);
+  margin-left: 0.4rem;
+}
+
+.top-sep { flex: 1; }
+
+.top-actions { display: flex; align-items: center; gap: 0.4rem; }
+
+.icon-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  transition: all 0.15s;
+  border-radius: var(--radius);
+  position: relative;
+}
+.icon-btn:hover { border-color: var(--amber); color: var(--amber); }
+.icon-btn.active { border-color: var(--amber); color: var(--amber); background: var(--amber)15; }
+.icon-btn.recording { border-color: var(--red); color: var(--red); animation: rec-blink 1s ease-in-out infinite; }
+@keyframes rec-blink { 0%,100% { background: transparent; } 50% { background: var(--red)22; } }
+
+.rec-dot {
+  position: absolute;
+  top: 4px; right: 4px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  display: none;
+}
+.recording .rec-dot { display: block; }
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  padding: 0.2rem 0.6rem;
+  font-family: var(--font-m);
+  font-size: 0.68rem;
+  color: var(--text2);
+  border-radius: var(--radius);
+}
+.user-avatar {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--amber)44;
+}
+.user-avatar-placeholder {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--amber)33;
+  border: 1px solid var(--amber)44;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  color: var(--amber);
+  font-family: var(--font-h);
+}
+
+.main-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ─────────────────────────────────────────
+   LEFT PANEL — CANVAS + VAULT
+───────────────────────────────────────── */
+.left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--border);
+  overflow: hidden;
+  min-width: 0;
+}
+
+.canvas-toolbar {
+  height: 42px;
+  min-height: 42px;
+  background: var(--surf);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 0.6rem;
+  gap: 0.3rem;
+}
+
+.tool-btn {
+  width: 30px; height: 30px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  transition: all 0.15s;
+  border-radius: var(--radius);
+}
+.tool-btn:hover { border-color: var(--amber); color: var(--amber); }
+.tool-btn.active { background: var(--amber)22; border-color: var(--amber); color: var(--amber); }
+
+.tool-sep { width: 1px; height: 20px; background: var(--border); margin: 0 0.2rem; }
+
+.color-swatch {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.color-swatch:hover { transform: scale(1.2); }
+.color-swatch.active { border-color: var(--parch2); }
+
+.brush-size-input {
+  width: 40px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.2rem 0.4rem;
+  font-family: var(--font-m);
+  font-size: 0.7rem;
+  text-align: center;
+  border-radius: var(--radius);
+}
+
+.canvas-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #070504;
+  cursor: crosshair;
+}
+
+#bg-canvas, #mark-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  image-rendering: pixelated;
+}
+#bg-canvas { z-index: 1; }
+#mark-canvas { z-index: 2; }
+
+.canvas-overlay-text {
+  position: absolute;
+  inset: 0; z-index: 3;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  color: var(--text2);
+  font-family: var(--font-m);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  pointer-events: none;
+  gap: 0.8rem;
+  text-transform: uppercase;
+}
+.canvas-overlay-text.hidden { display: none; }
+.canvas-grid-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(var(--border)44 1px, transparent 1px),
+    linear-gradient(90deg, var(--border)44 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ─────────────────────────────────────────
+   VAULT (collapsible bottom of left panel)
+───────────────────────────────────────── */
+.vault-panel {
+  height: 180px;
+  min-height: 180px;
+  border-top: 1px solid var(--border);
+  background: var(--surf);
+  display: flex;
+  flex-direction: column;
+  transition: height 0.25s;
+}
+.vault-panel.collapsed { height: 38px; min-height: 38px; }
+
+.vault-header {
+  height: 38px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  padding: 0 0.8rem;
+  gap: 0.6rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+}
+.vault-header:hover { background: var(--surf2); }
+.vault-header-title {
+  font-family: var(--font-h);
+  font-size: 0.7rem;
+  color: var(--amber);
+  letter-spacing: 0.1em;
+  flex: 1;
+}
+.vault-toggle { color: var(--text2); font-size: 0.7rem; transition: transform 0.25s; }
+.vault-panel.collapsed .vault-toggle { transform: rotate(180deg); }
+
+.vault-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.vault-item {
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.vault-item:hover { border-color: var(--amber)66; }
+.vault-item-icon { font-size: 0.9rem; flex-shrink: 0; }
+.vault-item-info { flex: 1; min-width: 0; }
+.vault-item-title {
+  font-family: var(--font-h);
+  font-size: 0.72rem;
+  color: var(--parch);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vault-item-meta { font-family: var(--font-m); font-size: 0.58rem; color: var(--steel); }
+.vault-empty {
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text2);
+  font-style: italic;
+}
+
+/* ─────────────────────────────────────────
+   RIGHT PANEL — CHANNELS + CHAT
+───────────────────────────────────────── */
+.right-panel {
+  width: 380px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  background: var(--surf);
+  overflow: hidden;
+}
+
+.channels-bar {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--surf2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.channels-bar::-webkit-scrollbar { display: none; }
+
+.channel-tab {
+  flex-shrink: 0;
+  padding: 0.55rem 0.9rem;
+  font-family: var(--font-m);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text2);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
+.channel-tab:hover { color: var(--parch); }
+.channel-tab.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+.messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.msg {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  animation: msg-in 0.2s ease;
+}
+@keyframes msg-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+.msg-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--surf2);
+  border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  color: var(--amber);
+  font-family: var(--font-h);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.msg-body { flex: 1; min-width: 0; }
+.msg-header { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.15rem; }
+.msg-name { font-family: var(--font-h); font-size: 0.72rem; color: var(--amber); }
+.msg-time { font-family: var(--font-m); font-size: 0.6rem; color: var(--steel); }
+.msg-text { font-size: 0.9rem; color: var(--parch); word-break: break-word; line-height: 1.5; }
+
+.msg.ai-msg .msg-avatar { background: var(--rune)22; border-color: var(--rune)44; color: var(--rune); }
+.msg.ai-msg .msg-name { color: var(--rune); }
+.msg.ai-msg .msg-text {
+  background: var(--rune)0d;
+  border: 1px solid var(--rune)22;
+  padding: 0.6rem 0.8rem;
+  font-style: italic;
+  border-radius: var(--radius);
+}
+
+.msg-audio {
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-radius: var(--radius);
+  margin-top: 0.3rem;
+}
+.msg-audio audio { width: 100%; max-width: 220px; height: 28px; }
+
+.msg-image img {
+  max-width: 200px;
+  max-height: 150px;
+  border: 1px solid var(--border2);
+  margin-top: 0.3rem;
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+
+.day-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0.4rem 0;
+}
+.day-divider-line { flex: 1; height: 1px; background: var(--border); }
+.day-divider-text { font-family: var(--font-m); font-size: 0.6rem; color: var(--text2); letter-spacing: 0.15em; white-space: nowrap; }
+
+/* ─────────────────────────────────────────
+   MESSAGE INPUT AREA
+───────────────────────────────────────── */
+.input-area {
+  border-top: 1px solid var(--border);
+  padding: 0.6rem;
+  background: var(--surf2);
+}
+
+.input-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: flex-end;
+}
+
+.msg-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  color: var(--parch2);
+  padding: 0.55rem 0.8rem;
+  font-family: var(--font-b);
+  font-size: 0.92rem;
+  resize: none;
+  outline: none;
+  border-radius: var(--radius);
+  max-height: 100px;
+  transition: border-color 0.2s;
+  line-height: 1.5;
+}
+.msg-input:focus { border-color: var(--amber)77; }
+.msg-input::placeholder { color: var(--text2); font-style: italic; }
+
+.send-btn {
+  width: 36px; height: 36px;
+  background: var(--amber);
+  border: none;
+  color: #0c0704;
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius);
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.send-btn:hover { background: var(--amber2); box-shadow: 0 0 12px var(--amber)55; }
+
+.input-tools {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: 0.4rem;
+}
+.input-tool-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 0.2rem 0.5rem;
+  font-family: var(--font-m);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: var(--radius);
+  display: flex; align-items: center; gap: 0.3rem;
+  transition: all 0.15s;
+}
+.input-tool-btn:hover { border-color: var(--amber); color: var(--amber); }
+.input-tool-btn.rec-active { border-color: var(--red); color: var(--red); background: var(--red)11; }
+
+/* ─────────────────────────────────────────
+   CHRONICLER DRAWER
+───────────────────────────────────────── */
+.chronicler-drawer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 420px;
+  background: var(--surf);
+  border-top: 1px solid var(--border2);
+  z-index: 100;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  display: flex;
+  flex-direction: column;
+}
+.chronicler-drawer.open { transform: translateY(0); }
+
+.drawer-header {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  gap: 0.8rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surf2);
+}
+.drawer-title { font-family: var(--font-h); font-size: 0.9rem; color: var(--amber); flex: 1; }
+
+.drawer-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.chronicler-controls {
+  width: 220px;
+  min-width: 220px;
+  border-left: 1px solid var(--border);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  overflow-y: auto;
+}
+
+.ctrl-label { font-family: var(--font-m); font-size: 0.62rem; color: var(--steel); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.3rem; }
+.ctrl-select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  color: var(--parch);
+  padding: 0.4rem 0.6rem;
+  font-family: var(--font-m);
+  font-size: 0.75rem;
+  border-radius: var(--radius);
+  outline: none;
+}
+.ctrl-select:focus { border-color: var(--amber); }
+
+.chronicler-output {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  font-family: var(--font-b);
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: var(--parch);
+}
+.chronicler-output .placeholder { color: var(--text2); font-style: italic; font-size: 0.85rem; }
+.chronicler-output h3 { font-family: var(--font-h); color: var(--amber); margin-bottom: 0.8rem; font-size: 1rem; }
+.chronicler-output p { margin-bottom: 0.8rem; }
+
+.spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid var(--border);
+  border-top-color: var(--amber);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─────────────────────────────────────────
+   VIDEO MODAL
+───────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+
+.modal-box {
+  background: var(--surf);
+  border: 1px solid var(--border2);
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.modal-header {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: var(--surf2);
+}
+.modal-title { font-family: var(--font-h); color: var(--amber); font-size: 0.9rem; flex: 1; }
+.modal-close { background: transparent; border: 1px solid var(--border); color: var(--text2); width: 28px; height: 28px; cursor: pointer; border-radius: var(--radius); transition: all 0.15s; }
+.modal-close:hover { border-color: var(--red); color: var(--red); }
+.modal-body { padding: 1.2rem; overflow-y: auto; }
+
+#video-frame { width: 100%; aspect-ratio: 16/9; border: 1px solid var(--border); background: #000; }
+
+/* ─────────────────────────────────────────
+   SETTINGS MODAL
+───────────────────────────────────────── */
+.settings-content { display: flex; flex-direction: column; gap: 1rem; }
+.settings-section { background: var(--surf2); border: 1px solid var(--border); padding: 1rem; }
+.settings-section-title { font-family: var(--font-h); font-size: 0.78rem; color: var(--amber); margin-bottom: 0.8rem; }
+.settings-field { margin-bottom: 0.8rem; }
+.settings-field label { display: block; font-family: var(--font-m); font-size: 0.62rem; letter-spacing: 0.2em; color: var(--steel); text-transform: uppercase; margin-bottom: 0.3rem; }
+.settings-field input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  color: var(--parch);
+  padding: 0.45rem 0.7rem;
+  font-family: var(--font-m);
+  font-size: 0.78rem;
+  border-radius: var(--radius);
+  outline: none;
+}
+.settings-field input:focus { border-color: var(--amber); }
+.settings-note { font-size: 0.78rem; color: var(--text2); font-style: italic; margin-top: 0.3rem; }
+
+/* ─────────────────────────────────────────
+   VAULT MODAL (full doc view)
+───────────────────────────────────────── */
+.vault-doc {
+  font-family: var(--font-b);
+  font-size: 0.95rem;
+  line-height: 1.9;
+  color: var(--parch);
+}
+.vault-doc h2 { font-family: var(--font-h); color: var(--amber); margin-bottom: 1rem; }
+.vault-doc p { margin-bottom: 0.8rem; }
+.vault-doc-actions { display: flex; gap: 0.6rem; margin-top: 1rem; flex-wrap: wrap; }
+
+/* ─────────────────────────────────────────
+   IMAGE LIGHTBOX
+───────────────────────────────────────── */
+#lightbox { cursor: zoom-out; }
+#lightbox img { max-width: 90vw; max-height: 85vh; object-fit: contain; }
+
+/* ─────────────────────────────────────────
+   UPLOAD PREVIEW BAR
+───────────────────────────────────────── */
+.upload-preview {
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.6rem;
+  margin-bottom: 0.4rem;
+  display: none;
+  align-items: center;
+  gap: 0.6rem;
+  border-radius: var(--radius);
+}
+.upload-preview.visible { display: flex; }
+.upload-preview-name { font-family: var(--font-m); font-size: 0.7rem; color: var(--steel); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.upload-preview-remove { background: none; border: none; color: var(--red); cursor: pointer; font-size: 0.9rem; }
+
+/* ─────────────────────────────────────────
+   NOTIFICATIONS / TOASTS
+───────────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  top: 58px;
+  right: 1rem;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  pointer-events: none;
+}
+.toast {
+  background: var(--surf2);
+  border: 1px solid var(--border2);
+  padding: 0.6rem 1rem;
+  font-family: var(--font-m);
+  font-size: 0.7rem;
+  color: var(--parch);
+  letter-spacing: 0.05em;
+  animation: toast-in 0.3s ease, toast-out 0.3s ease 2.7s forwards;
+  pointer-events: auto;
+}
+.toast.success { border-color: var(--rune); color: var(--rune); }
+.toast.error { border-color: var(--red); color: var(--red); }
+@keyframes toast-in { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }
+@keyframes toast-out { to { opacity: 0; transform: translateX(20px); } }
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 700px) {
+  .right-panel { width: 100%; }
+  .left-panel { display: none; }
+  .left-panel.mobile-active { display: flex; position: fixed; inset: 48px 0 0; z-index: 90; }
+}
+
+/* ─────────────────────────────────────────
+   MISC UTILS
+───────────────────────────────────────── */
+.flex { display: flex; }
+.items-center { align-items: center; }
+.gap-1 { gap: 0.4rem; }
+.hidden { display: none !important; }
+.text-amber { color: var(--amber); }
+.text-rune { color: var(--rune); }
+.text-steel { color: var(--steel); }
+.mt-1 { margin-top: 0.4rem; }
+.mt-2 { margin-top: 0.8rem; }
+.w-full { width: 100%; }
 </style>
 </head>
 <body>
 
-<!-- STICKY NAV -->
-<nav id="mainNav">
-  <span class="nav-brand">⚔ RPG Hub</span>
-  <ul class="nav-links">
-    <li><a href="#vision">חזון</a></li>
-    <li><a href="#pillars">עמודי תווך</a></li>
-    <li><a href="#flow">זרימת נתונים</a></li>
-    <li><a href="#apis">הגדרות API</a></li>
-    <li><a href="#ui">ממשק</a></li>
-    <li><a href="#future">עתיד</a></li>
-  </ul>
-</nav>
+<!-- ══════════════════════════════════════════
+     SETUP SCREEN
+══════════════════════════════════════════ -->
+<div id="setup-screen" class="screen">
+  <div class="setup-box">
+    <div class="setup-title">⚔ RPG Hub — הגדרת מערכת</div>
+    <p class="setup-sub">הגדרה ראשונית · הכנס את פרטי הפרויקט שלך. הנתונים נשמרים מקומית בדפדפן.</p>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-bg"></div>
-  <div class="rune-ring"></div>
-  <div class="rune-ring rune-ring-2"></div>
-  <div class="hero-content">
-    <div class="sigil">🗺️</div>
-    <h1 class="title">AI-Powered RPG<br>Storytelling Hub</h1>
-    <h2 class="subtitle">Project Vision Canvas · v1.0</h2>
-    <p class="hero-tagline">
-      מרכז פיקוד דיגיטלי לקבוצת חברים המשחקים משחק תפקידים סיפורי —
-      שיח חי הופך לנכס דיגיטלי מתועד, מנוהל על ידי בינה מלאכותית.
-    </p>
-    <div class="divider">
-      <div class="divider-line"></div>
-      <span class="divider-gem">◈</span>
-      <div class="divider-line"></div>
+    <div class="setup-section-title">🔥 Firebase Configuration</div>
+    <div class="setup-group">
+      <label>API Key</label>
+      <input class="setup-input" id="cfg-apiKey" placeholder="AIzaSy..." autocomplete="off">
+    </div>
+    <div class="setup-group">
+      <label>Auth Domain</label>
+      <input class="setup-input" id="cfg-authDomain" placeholder="your-project.firebaseapp.com">
+    </div>
+    <div class="setup-group">
+      <label>Project ID</label>
+      <input class="setup-input" id="cfg-projectId" placeholder="your-project-id">
+    </div>
+    <div class="setup-group">
+      <label>Storage Bucket</label>
+      <input class="setup-input" id="cfg-storageBucket" placeholder="your-project.appspot.com">
+    </div>
+    <div class="setup-group">
+      <label>Messaging Sender ID</label>
+      <input class="setup-input" id="cfg-messagingSenderId" placeholder="123456789">
+    </div>
+    <div class="setup-group">
+      <label>App ID</label>
+      <input class="setup-input" id="cfg-appId" placeholder="1:123:web:abc123">
+    </div>
+    <div class="setup-group">
+      <label>Database URL <span style="color:var(--text2);font-family:var(--font-m);font-size:0.6rem;">(Realtime Database)</span></label>
+      <input class="setup-input" id="cfg-databaseURL" placeholder="https://your-project-default-rtdb.firebaseio.com">
+    </div>
+
+    <div class="setup-section-title">
+      🧠 AI — Anthropic Claude
+      <span class="optional-tag">אופציונלי</span>
+    </div>
+    <div class="setup-note">🔒 ה-API key נשמר בלוקל סטורג׳ שלך בלבד. לאפליקציית חברים פרטית — בסדר. לאפליקציה ציבורית — השתמש ב-Firebase Functions.</div>
+    <div class="setup-group">
+      <label>Anthropic API Key</label>
+      <input class="setup-input" id="cfg-anthropicKey" placeholder="sk-ant-..." type="password" autocomplete="off">
+    </div>
+
+    <div class="setup-section-title">
+      📹 Daily.co — וידאו לייב
+      <span class="optional-tag">אופציונלי</span>
+    </div>
+    <div class="setup-group">
+      <label>Daily.co Domain (ללא https)</label>
+      <input class="setup-input" id="cfg-dailyDomain" placeholder="your-team.daily.co">
+    </div>
+    <div class="setup-group">
+      <label>Room Name</label>
+      <input class="setup-input" id="cfg-dailyRoom" placeholder="rpg-session">
+    </div>
+
+    <div style="display:flex;gap:0.8rem;margin-top:2rem;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="saveSetup()">⚔ שמור והמשך</button>
+      <button class="btn btn-ghost" onclick="demoMode()">🎲 מצב הדגמה (ללא Firebase)</button>
     </div>
   </div>
-  <div class="scroll-indicator">▾</div>
 </div>
 
-<!-- VISION -->
-<section id="vision">
-  <div class="section-label">// CHAPTER I</div>
-  <h2 class="section-title">חזון המערכת</h2>
-  <div class="vision-block">
-    <p>
-      יצירת <strong style="color:var(--amber)">"מרכז פיקוד" דיגיטלי</strong> לקבוצת חברים המשחקים משחק תפקידים סיפורי.
-      המערכת הופכת את השיח החי — קול, וידאו, צ'אט — ל<strong style="color:var(--rune)">נכס דיגיטלי מתועד, מאורגן ומנוהל</strong>
-      על ידי בינה מלאכותית, תוך שילוב לוח טקטי אינטראקטיבי. כל שיחה, כל קרב, כל החלטה עלילתית —
-      נשמרת, מסוכמת ומוכנה להמשך.
-    </p>
-  </div>
-
-  <div class="status-row">
-    <div class="status-chip"><span class="status-dot"></span> Phase: Design</div>
-    <div class="status-chip"><span class="status-dot warn"></span> APIs: Pending Config</div>
-    <div class="status-chip"><span class="status-dot danger"></span> Backend: Not Deployed</div>
-    <div class="status-chip"><span class="status-dot"></span> Target: GitHub Pages</div>
-  </div>
-</section>
-
-<div class="divider" style="padding: 0 2rem;"><div class="divider-line"></div><span class="divider-gem">⚔</span><div class="divider-line"></div></div>
-
-<!-- PILLARS -->
-<section id="pillars">
-  <div class="section-label">// CHAPTER II</div>
-  <h2 class="section-title">ארבעת עמודי התווך</h2>
-  <p class="section-desc">כל מערכת נשענת על ארבעה ממדים — תקשורת, אינטליגנציה, ארכיון, לוח טקטי.</p>
-
-  <div class="pillars-grid">
-    <div class="pillar-card">
-      <span class="pillar-icon" style="color:#8ba0b4;">📡</span>
-      <div class="pillar-num">// PILLAR I</div>
-      <div class="pillar-title">ערוצי תקשורת</div>
-      <ul class="pillar-items">
-        <li>צ'אט רב-ערוצי לפי נושאים (עלילה, חוקים, לור)</li>
-        <li>הודעות קוליות, סרטונים, תמונות וקבצים</li>
-        <li>שיחת וידאו / אודיו לייב עם הקלטה</li>
-        <li>הקלטה נפרדת לכל משתתף (לתמלול)</li>
-        <li>מטא-דאטה אוטומטי: שולח, זמן, ערוץ</li>
-      </ul>
-    </div>
-
-    <div class="pillar-card">
-      <span class="pillar-icon" style="color:#e8a020;">🧠</span>
-      <div class="pillar-num">// PILLAR II</div>
-      <div class="pillar-title">המוח — AI Intelligence</div>
-      <ul class="pillar-items">
-        <li>הכרוניקן: תמלולים → סיפורים מובנים</li>
-        <li>ייצוא PDF/Markdown/Word לדרייב</li>
-        <li>ממשק פקודות טבעי לבקשות מה-AI</li>
-        <li>זיהוי הקשר לפי ערוץ (מפות / סיפור)</li>
-        <li>ניתוח תמונות, ניתוח עלילה, סיכומי קרב</li>
-      </ul>
-    </div>
-
-    <div class="pillar-card">
-      <span class="pillar-icon" style="color:#5b8a6e;">🗄️</span>
-      <div class="pillar-num">// PILLAR III</div>
-      <div class="pillar-title">המאגר — The Archive</div>
-      <ul class="pillar-items">
-        <li>Firebase Firestore לנתונים בזמן אמת</li>
-        <li>חיבור ישיר ל-Google Drive</li>
-        <li>כספת קבצים — מסונן לפי תאריך ונושא</li>
-        <li>שמירת מצב מלאה (State Persistence)</li>
-        <li>המשכיות — חזרה לנקודה כלשהי בעבר</li>
-      </ul>
-    </div>
-
-    <div class="pillar-card">
-      <span class="pillar-icon" style="color:#c0392b;">⚔️</span>
-      <div class="pillar-num">// PILLAR IV</div>
-      <div class="pillar-title">הלוח הטקטי</div>
-      <ul class="pillar-items">
-        <li>מפה אינטראקטיבית בזמן אמת (Multiplayer)</li>
-        <li>כלי ציור: חצים, אזורים, צבעים</li>
-        <li>שכבות: רקע, סימוני שחקנים, DM</li>
-        <li>סנכרון עם Firebase RTDB</li>
-        <li>ייצוא תמונת מצב למסמך הסיכום</li>
-      </ul>
+<!-- ══════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════ -->
+<div id="login-screen" class="screen">
+  <div class="login-box">
+    <div class="login-sigil">⚔</div>
+    <h1 class="login-title h-font">RPG Hub</h1>
+    <p class="login-sub">מרכז הפיקוד לקבוצת השחקנים שלך</p>
+    <button class="btn-google" onclick="signInGoogle()">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.5l6.8-6.8C35.8 2.4 30.3 0 24 0 14.7 0 6.7 5.4 2.6 13.2l7.9 6.1C12.4 13 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.6 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9C43.7 37.7 46.6 31.5 46.6 24.5z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7L2.6 13.2C.9 16.6 0 20.2 0 24s.9 7.4 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.3 0 11.6-2.1 15.4-5.6l-7.6-5.9c-2.1 1.4-4.8 2.2-7.8 2.2-6.2 0-11.5-4.2-13.4-9.9l-7.9 6.1C6.7 42.6 14.7 48 24 48z"/></svg>
+      כניסה עם Google
+    </button>
+    <button class="btn-demo" onclick="demoMode()">🎲 המשך במצב הדגמה</button>
+    <div class="login-reconfigure">
+      <button class="btn btn-ghost" style="font-size:0.65rem;padding:0.3rem 0.8rem;" onclick="showSetup()">⚙ שנה הגדרות</button>
     </div>
   </div>
-</section>
+</div>
 
-<!-- DATA FLOW -->
-<section id="flow" style="padding-top: 0;">
-  <div class="section-label">// CHAPTER III</div>
-  <h2 class="section-title">זרימת הנתונים</h2>
-  <p class="section-desc">מהקלט הגולמי ועד לקובץ המוגמר בדרייב — כל שלב בצינור.</p>
+<!-- ══════════════════════════════════════════
+     APP SCREEN
+══════════════════════════════════════════ -->
+<div id="app-screen" class="screen">
 
-  <div class="flow-container">
-    <div class="flow-step">
-      <div class="flow-num">STEP 01</div>
-      <span class="flow-icon">🎙️</span>
-      <div class="flow-title">קלט</div>
-      <div class="flow-desc">שחקנים מדברים בוידאו / כותבים בצ'אט</div>
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <button class="icon-btn" id="mobile-canvas-btn" onclick="toggleMobileCanvas()" title="לוח טקטי">🗺️</button>
+    <div class="top-logo">⚔ RPG Hub</div>
+
+    <div id="session-info" style="font-family:var(--font-m);font-size:0.62rem;color:var(--rune);letter-spacing:0.1em;display:none;">
+      <span class="spinner" style="width:10px;height:10px;"></span>
+      <span id="session-status">מחובר</span>
     </div>
 
-    <div class="flow-step">
-      <div class="flow-arrow">▸</div>
-      <div class="flow-num">STEP 02</div>
-      <span class="flow-icon">⚙️</span>
-      <div class="flow-title">עיבוד</div>
-      <div class="flow-desc">Speech-to-Text + שמירת ציורים כנתונים וקטוריים</div>
-    </div>
+    <div class="top-sep"></div>
 
-    <div class="flow-step">
-      <div class="flow-arrow">▸</div>
-      <div class="flow-num">STEP 03</div>
-      <span class="flow-icon">💬</span>
-      <div class="flow-title">בקשת משתמש</div>
-      <div class="flow-desc">"סכם את הקרב האחרון כקובץ וורד ושים בדרייב"</div>
-    </div>
-
-    <div class="flow-step">
-      <div class="flow-arrow">▸</div>
-      <div class="flow-num">STEP 04</div>
-      <span class="flow-icon">🤖</span>
-      <div class="flow-title">AI זיקוק</div>
-      <div class="flow-desc">Claude / GPT-4 מעבד ומזקק את התמלול</div>
-    </div>
-
-    <div class="flow-step">
-      <div class="flow-arrow">▸</div>
-      <div class="flow-num">STEP 05</div>
-      <span class="flow-icon">📄</span>
-      <div class="flow-title">פלט</div>
-      <div class="flow-desc">PDF עם טקסט + צילום מסך מפה → Drive → לינק בצ'אט</div>
-    </div>
-  </div>
-</section>
-
-<div class="divider" style="padding: 0 2rem;"><div class="divider-line"></div><span class="divider-gem">◈</span><div class="divider-line"></div></div>
-
-<!-- API CONFIG -->
-<section id="apis">
-  <div class="section-label">// CHAPTER IV — הגדרות</div>
-  <h2 class="section-title">מפת ה-APIs וההגדרות</h2>
-  <p class="section-desc">כל שירות חיצוני שהמערכת זקוקה לו, עלותו, ואופן ההגדרה.</p>
-
-  <!-- Firebase -->
-  <div class="api-section">
-    <div class="api-section-title">🔥 Firebase (Google) — ליבת ה-Backend</div>
-    <table class="api-table">
-      <thead>
-        <tr>
-          <th>שירות</th>
-          <th>מטרה</th>
-          <th>עלות</th>
-          <th>סטטוס</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="api-name">Firebase Auth</span></td>
-          <td class="api-purpose">התחברות עם Google / Email לכל שחקן</td>
-          <td class="api-tier">Free Tier (10K/month)</td>
-          <td><span class="badge badge-free">חינם</span></td>
-        </tr>
-        <tr>
-          <td><span class="api-name">Firestore</span></td>
-          <td class="api-purpose">נתוני צ'אט, פרופילי שחקנים, מטא-דאטה</td>
-          <td class="api-tier">50K reads / 20K writes free/day</td>
-          <td><span class="badge badge-free">חינם</span></td>
-        </tr>
-        <tr>
-          <td><span class="api-name">Realtime Database</span></td>
-          <td class="api-purpose">מצב הלוח הטקטי בזמן אמת</td>
-          <td class="api-tier">1GB storage, 10GB transfer free</td>
-          <td><span class="badge badge-free">חינם</span></td>
-        </tr>
-        <tr>
-          <td><span class="api-name">Firebase Storage</span></td>
-          <td class="api-purpose">קבצים, הקלטות, תמונות מפות</td>
-          <td class="api-tier">5GB free</td>
-          <td><span class="badge badge-free">חינם</span></td>
-        </tr>
-        <tr>
-          <td><span class="api-name">Firebase Functions</span></td>
-          <td class="api-purpose">לוגיקת שרת (AI Calls, Drive export)</td>
-          <td class="api-tier">125K invocations free / לא זמין בGitHub Pages</td>
-          <td><span class="badge badge-optional">שרת נפרד</span></td>
-        </tr>
-      </tbody>
-    </table>
-    <div style="margin-top:1.5rem; font-size:0.8rem; color:#5b8a6e; font-family:'Share Tech Mono',monospace;">
-      → console.firebase.google.com | צור Project חדש | הפעל Authentication + Firestore + RTDB
-    </div>
-  </div>
-
-  <!-- AI -->
-  <div class="api-section">
-    <div class="api-section-title">🧠 AI / LLM — הכרוניקן</div>
-    <table class="api-table">
-      <thead>
-        <tr>
-          <th>שירות</th>
-          <th>מטרה</th>
-          <th>עלות</th>
-          <th>סטטוס</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="api-name">Anthropic Claude API</span></td>
-          <td class="api-purpose">סיכומים, ניתוח עלילה, יצירת מסמכים</td>
-          <td class="api-tier">~$3 / 1M tokens (Sonnet)</td>
-          <td><span class="badge badge-key">API Key</span></td>
-        </tr>
-        <tr>
-          <td><span class="api-name">OpenAI GPT-4o</span></td>
-          <td class="api-purpose">אלטרנטיבה, ניתוח תמונות מפות</td>
-          <td class="api-tier">~$5 / 1M tokens</td>
-          <td><span class="badge badge-optional">אופציונלי</span></td>
-        </tr>
-        <tr>
-          <td><span class="api-name">OpenAI Whisper</span></td>
-          <td class="api-purpose">Speech-to-Text להקלטות</td>
-          <td class="api-tier">$0.006 / minute</td>
-          <td><span class="badge badge-key">API Key</span></td>
-        </tr>
-        <tr>
-          <td><span class="api-name">Web Speech API</span></td>
-          <td class="api-purpose">Speech-to-Text בדפדפן (ללא עלות)</td>
-          <td class="api-tier">Chrome/Edge בלבד</td>
-          <td><span class="badge badge-free">חינם</span></td>
-        </tr>
-      </tbody>
-    </table>
-    <div style="margin-top:1.5rem; font-size:0.8rem; color:#e8a02077; font-family:'Share Tech Mono',monospace;">
-      ⚠ API Keys חייבים לגור ב-Firebase Functions בלבד — לעולם לא בקוד Frontend!
-    </div>
-  </div>
-
-  <!-- Video -->
-  <div class="api-section">
-    <div class="api-section-title">📹 וידאו ואודיו לייב</div>
-    <table class="api-table">
-      <thead>
-        <tr>
-          <th>שירות</th>
-          <th>מטרה</th>
-          <th>עלות</th>
-          <th>סטטוס</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="api-name">Daily.co SDK</span></td>
-          <td class="api-purpose">וידאו + אודיו P2P, הקלטה לכל משתתף</td>
-          <td class="api-tier">Free: 10K min/month | $0.004/min beyond</td>
-          <td><span class="badge badge-free">מומלץ</span></td>
-        </tr>
-        <tr>
-          <td><span class="api-name">LiveKit</span></td>
-          <td class="api-purpose">WebRTC עצמי, open-source, self-hosted</td>
-          <td class="api-tier">Self-hosted = חינם, Cloud = $</td>
-          <td><span class="badge badge-optional">אלטרנטיבה</span></td>
-        </tr>
-        <tr>
-          <td><span class="api-name">WebRTC Native</span></td>
-          <td class="api-purpose">P2P ישיר בין שחקנים (ללא שרת)</td>
-          <td class="api-tier">STUN/TURN חינם + TURN שרת $</td>
-          <td><span class="badge badge-optional">מורכב</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Google Drive -->
-  <div class="api-section">
-    <div class="api-section-title">📂 Google Drive — The Archive</div>
-    <table class="api-table">
-      <thead>
-        <tr>
-          <th>שירות</th>
-          <th>מטרה</th>
-          <th>עלות</th>
-          <th>סטטוס</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="api-name">Google Drive API v3</span></td>
-          <td class="api-purpose">העלאה/הורדה אוטומטית של קבצי AI</td>
-          <td class="api-tier">Free (בתוך quota)</td>
-          <td><span class="badge badge-key">OAuth2</span></td>
-        </tr>
-        <tr>
-          <td><span class="api-name">Google Docs API</span></td>
-          <td class="api-purpose">יצירת מסמכי סיכום ישירות</td>
-          <td class="api-tier">Free</td>
-          <td><span class="badge badge-optional">אופציונלי</span></td>
-        </tr>
-      </tbody>
-    </table>
-    <div style="margin-top:1.5rem; font-size:0.8rem; color:#5b8a6e; font-family:'Share Tech Mono',monospace;">
-      → console.cloud.google.com | Enable Drive API | OAuth 2.0 Credentials | Scopes: drive.file
-    </div>
-  </div>
-
-  <!-- .env example -->
-  <div class="env-block">
-    <pre>
-<span class="env-comment"># ── Firebase ──────────────────────────────────────</span>
-<span class="env-key">VITE_FIREBASE_API_KEY</span>=<span class="env-placeholder">YOUR_FIREBASE_API_KEY</span>
-<span class="env-key">VITE_FIREBASE_AUTH_DOMAIN</span>=<span class="env-placeholder">your-project.firebaseapp.com</span>
-<span class="env-key">VITE_FIREBASE_PROJECT_ID</span>=<span class="env-placeholder">your-project-id</span>
-<span class="env-key">VITE_FIREBASE_STORAGE_BUCKET</span>=<span class="env-placeholder">your-project.appspot.com</span>
-<span class="env-key">VITE_FIREBASE_MESSAGING_SENDER_ID</span>=<span class="env-placeholder">123456789</span>
-<span class="env-key">VITE_FIREBASE_APP_ID</span>=<span class="env-placeholder">1:123:web:abc123</span>
-<span class="env-key">VITE_FIREBASE_DATABASE_URL</span>=<span class="env-placeholder">https://your-project-default-rtdb.firebaseio.com</span>
-
-<span class="env-comment"># ── AI APIs (ב-Firebase Functions בלבד!) ──────────</span>
-<span class="env-key">ANTHROPIC_API_KEY</span>=<span class="env-placeholder">sk-ant-...</span>
-<span class="env-key">OPENAI_API_KEY</span>=<span class="env-placeholder">sk-...</span>
-
-<span class="env-comment"># ── Video (Daily.co) ─────────────────────────────</span>
-<span class="env-key">VITE_DAILY_DOMAIN</span>=<span class="env-placeholder">your-domain.daily.co</span>
-<span class="env-key">DAILY_API_KEY</span>=<span class="env-placeholder">secret-key (Functions only)</span>
-
-<span class="env-comment"># ── Google OAuth ─────────────────────────────────</span>
-<span class="env-key">VITE_GOOGLE_CLIENT_ID</span>=<span class="env-placeholder">xxx.apps.googleusercontent.com</span>
-    </pre>
-  </div>
-</section>
-
-<!-- UI CONCEPT -->
-<section id="ui" style="padding-top: 2rem;">
-  <div class="section-label">// CHAPTER V</div>
-  <h2 class="section-title">חוויית המשתמש — UI/UX Concept</h2>
-  <p class="section-desc">מסך חצוי: פעולה חיה מימין, תיעוד ותכנון משמאל.</p>
-
-  <div class="ui-diagram">
-    <div class="ui-diagram-label">// WIREFRAME CONCEPT — מסך ראשי</div>
-    <div class="ui-layout">
-      <div class="ui-pane">
-        <div class="ui-pane-title">◈ הלוח הטקטי + Vault</div>
-        <div class="mock-map">
-          <span style="position:relative;z-index:1;">🗺️</span>
-          <div class="mock-dot" style="top:25%;left:30%;"></div>
-          <div class="mock-dot"></div>
-          <div class="mock-dot"></div>
-        </div>
-        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-          <div style="flex:1;background:#e8a02011;border:1px solid #e8a02022;padding:0.6rem;font-size:0.72rem;color:#c9a96e;font-family:'Share Tech Mono',monospace;">
-            📄 קרב הדרקון.pdf<br>
-            <span style="color:#5b8a6e;font-size:0.6rem;">14.3.25 · Chapter 3</span>
-          </div>
-          <div style="flex:1;background:#5b8a6e11;border:1px solid #5b8a6e22;padding:0.6rem;font-size:0.72rem;color:#c9a96e;font-family:'Share Tech Mono',monospace;">
-            📜 סיכום מפגש 7<br>
-            <span style="color:#5b8a6e;font-size:0.6rem;">07.3.25 · Chronicle</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="ui-divider"></div>
-
-      <div class="ui-pane">
-        <div class="ui-pane-title">◈ צ'אט + וידאו לייב</div>
-        <div class="mock-chat">
-          <div class="mock-msg">
-            <span class="sender">🧙 Arad [עלילה]</span>
-            הדרקון מניף כנף — כולם מתחבאים?
-          </div>
-          <div class="mock-msg mine">
-            <span class="sender">⚔ Noa [עלילה]</span>
-            אני מנסה להסתתר מאחורי הסלע הגדול
-          </div>
-          <div class="mock-msg" style="background:#e8a02011;border-right:2px solid var(--amber);">
-            <span class="sender">🤖 Chronicler [AI]</span>
-            הפקד סיכום הפלטה ה-3 נוצר ← Drive
-          </div>
-        </div>
-        <div style="margin-top:1rem;padding:0.5rem 0.8rem;background:#ffffff05;border:1px dashed #e8a02022;font-size:0.72rem;color:#8ba0b4;font-family:'Share Tech Mono',monospace;display:flex;gap:0.5rem;align-items:center;">
-          <span style="color:#e74c3c;">●</span> REC · 00:47:23 · 4 משתתפים
-        </div>
+    <!-- DM Controls -->
+    <div class="top-actions">
+      <button class="icon-btn" id="rec-btn" onclick="toggleRecording()" title="הקלט">
+        🎙️
+        <div class="rec-dot"></div>
+      </button>
+      <button class="icon-btn" onclick="openChronicler()" title="הכרוניקן — AI Chronicler">📜</button>
+      <button class="icon-btn" onclick="openVideo()" title="שיחת וידאו">📹</button>
+      <button class="icon-btn" onclick="clearCanvas()" title="נקה לוח">🗑️</button>
+      <button class="icon-btn" onclick="openSettings()" title="הגדרות">⚙️</button>
+      <div class="user-chip" id="user-chip">
+        <div class="user-avatar-placeholder" id="user-initial">?</div>
+        <span id="user-name">אורח</span>
       </div>
     </div>
   </div>
 
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.5rem;">
-    <div style="background:#09060388;border:1px solid #e8a02018;padding:1.2rem;">
-      <div style="font-family:'Cinzel',serif;font-size:0.85rem;color:var(--amber);margin-bottom:0.6rem;">🎮 DM Control Bar</div>
-      <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-        <div style="background:#c0392b22;border:1px solid #c0392b44;padding:0.3rem 0.6rem;font-size:0.65rem;font-family:'Share Tech Mono',monospace;color:#e74c3c;">⏺ הקלט</div>
-        <div style="background:#e8a02022;border:1px solid #e8a02044;padding:0.3rem 0.6rem;font-size:0.65rem;font-family:'Share Tech Mono',monospace;color:var(--amber);">🗺 החלף מפה</div>
-        <div style="background:#5b8a6e22;border:1px solid #5b8a6e44;padding:0.3rem 0.6rem;font-size:0.65rem;font-family:'Share Tech Mono',monospace;color:var(--rune);">📜 סיכם AI</div>
+  <!-- MAIN LAYOUT -->
+  <div class="main-layout">
+
+    <!-- LEFT: CANVAS -->
+    <div class="left-panel" id="left-panel">
+
+      <!-- Canvas Toolbar -->
+      <div class="canvas-toolbar">
+        <span class="label" style="margin-left:0.4rem;">כלי:</span>
+        <button class="tool-btn active" id="tool-pen" onclick="setTool('pen')" title="עט">✏️</button>
+        <button class="tool-btn" id="tool-arrow" onclick="setTool('arrow')" title="חץ">➡️</button>
+        <button class="tool-btn" id="tool-rect" onclick="setTool('rect')" title="מלבן">⬜</button>
+        <button class="tool-btn" id="tool-circle" onclick="setTool('circle')" title="עיגול">⭕</button>
+        <button class="tool-btn" id="tool-text" onclick="setTool('text')" title="טקסט">T</button>
+        <button class="tool-btn" id="tool-erase" onclick="setTool('erase')" title="מחק">⚪</button>
+        <div class="tool-sep"></div>
+        <span class="label">צבע:</span>
+        <div class="color-swatch active" style="background:#c87820;" onclick="setColor('#c87820')" data-color="#c87820"></div>
+        <div class="color-swatch" style="background:#e8d5b0;" onclick="setColor('#e8d5b0')" data-color="#e8d5b0"></div>
+        <div class="color-swatch" style="background:#c0392b;" onclick="setColor('#c0392b')" data-color="#c0392b"></div>
+        <div class="color-swatch" style="background:#3d6b52;" onclick="setColor('#3d6b52')" data-color="#3d6b52"></div>
+        <div class="color-swatch" style="background:#607080;" onclick="setColor('#607080')" data-color="#607080"></div>
+        <div class="tool-sep"></div>
+        <span class="label">גודל:</span>
+        <input type="number" class="brush-size-input" id="brush-size" value="3" min="1" max="30" onchange="brushSize=parseInt(this.value)">
+        <div class="top-sep"></div>
+        <button class="tool-btn" onclick="loadMapImage()" title="העלה מפת רקע">🖼️</button>
+        <input type="file" id="map-file-input" accept="image/*" style="display:none" onchange="handleMapUpload(event)">
+        <button class="tool-btn" onclick="downloadCanvas()" title="שמור תמונה">💾</button>
+        <button class="tool-btn" onclick="undoCanvas()" title="בטל">↩️</button>
+      </div>
+
+      <!-- Canvas Area -->
+      <div class="canvas-wrap" id="canvas-wrap">
+        <div class="canvas-grid-bg"></div>
+        <canvas id="bg-canvas"></canvas>
+        <canvas id="mark-canvas"
+          onmousedown="startDraw(event)"
+          onmousemove="drawing(event)"
+          onmouseup="endDraw(event)"
+          onmouseleave="endDraw(event)"
+          ontouchstart="startDraw(event)"
+          ontouchmove="drawing(event)"
+          ontouchend="endDraw(event)"
+        ></canvas>
+        <div class="canvas-overlay-text" id="canvas-hint">
+          <div>🗺️</div>
+          <div>לוח טקטי</div>
+          <div style="font-size:0.65rem;color:var(--text2);">לחץ על 🖼️ להעלאת מפת רקע</div>
+        </div>
+      </div>
+
+      <!-- Vault -->
+      <div class="vault-panel" id="vault-panel">
+        <div class="vault-header" onclick="toggleVault()">
+          <span>📚</span>
+          <span class="vault-header-title">The Vault — כספת הקבצים</span>
+          <span class="vault-toggle">▲</span>
+        </div>
+        <div class="vault-list" id="vault-list">
+          <div class="vault-empty">הכספת ריקה · בקש מהכרוניקן ליצור סיכום</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: CHAT -->
+    <div class="right-panel">
+
+      <!-- Channels Bar -->
+      <div class="channels-bar">
+        <button class="channel-tab active" data-channel="story" onclick="switchChannel('story', this)">⚔ עלילה</button>
+        <button class="channel-tab" data-channel="general" onclick="switchChannel('general', this)">💬 כללי</button>
+        <button class="channel-tab" data-channel="rules" onclick="switchChannel('rules', this)">📖 חוקים</button>
+        <button class="channel-tab" data-channel="lore" onclick="switchChannel('lore', this)">🌍 לור</button>
+        <button class="channel-tab" data-channel="maps" onclick="switchChannel('maps', this)">🗺️ מפות</button>
+      </div>
+
+      <!-- Messages -->
+      <div class="messages-area" id="messages-area">
+        <!-- messages injected here -->
+      </div>
+
+      <!-- Input Area -->
+      <div class="input-area">
+        <div class="input-tools">
+          <button class="input-tool-btn" onclick="document.getElementById('attach-input').click()">📎 קובץ</button>
+          <input type="file" id="attach-input" style="display:none" accept="image/*,audio/*,video/*,.pdf" onchange="handleAttach(event)">
+          <button class="input-tool-btn" id="voice-rec-btn" onclick="toggleVoiceMsg()">🎙️ קולי</button>
+          <button class="input-tool-btn" onclick="requestAISummary()">🤖 AI</button>
+        </div>
+        <div class="upload-preview" id="upload-preview">
+          <span>📎</span>
+          <span class="upload-preview-name" id="upload-name"></span>
+          <button class="upload-preview-remove" onclick="clearAttach()">✕</button>
+        </div>
+        <div class="input-row">
+          <textarea
+            class="msg-input"
+            id="msg-input"
+            placeholder="כתוב הודעה..."
+            rows="1"
+            onkeydown="handleInputKey(event)"
+            oninput="autoResize(this)"
+          ></textarea>
+          <button class="send-btn" onclick="sendMessage()">➤</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CHRONICLER DRAWER
+══════════════════════════════════════════ -->
+<div class="chronicler-drawer" id="chronicler-drawer">
+  <div class="drawer-header">
+    <span>📜</span>
+    <span class="drawer-title">הכרוניקן — AI Storyteller</span>
+    <button class="icon-btn" onclick="closeChronicler()">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="chronicler-output" id="chronicler-output">
+      <p class="placeholder">בחר סוג סיכום ולחץ "צור" — הכרוניקן יעבד את ההודעות מהערוץ הנוכחי.</p>
+    </div>
+    <div class="chronicler-controls">
+      <div>
+        <div class="ctrl-label">סוג סיכום</div>
+        <select class="ctrl-select" id="chron-type">
+          <option value="session">סיכום מפגש</option>
+          <option value="battle">תיאור קרב</option>
+          <option value="chronicle">כרוניקה עלילתית</option>
+          <option value="npc">פרופיל NPC</option>
+          <option value="location">תיאור מקום</option>
+        </select>
+      </div>
+      <div>
+        <div class="ctrl-label">ערוץ מקור</div>
+        <select class="ctrl-select" id="chron-channel">
+          <option value="story">⚔ עלילה</option>
+          <option value="general">💬 כללי</option>
+          <option value="rules">📖 חוקים</option>
+          <option value="lore">🌍 לור</option>
+        </select>
+      </div>
+      <div>
+        <div class="ctrl-label">כמות הודעות</div>
+        <select class="ctrl-select" id="chron-limit">
+          <option value="20">20 אחרונות</option>
+          <option value="50" selected>50 אחרונות</option>
+          <option value="100">100 אחרונות</option>
+        </select>
+      </div>
+      <div>
+        <div class="ctrl-label">שפת פלט</div>
+        <select class="ctrl-select" id="chron-lang">
+          <option value="he">עברית</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+      <button class="btn btn-primary w-full" onclick="runChronicler()" id="chron-btn" style="justify-content:center;">
+        ✦ צור
+      </button>
+      <button class="btn btn-rune w-full" onclick="saveToVault()" id="save-vault-btn" style="justify-content:center;display:none;">
+        📚 שמור ב-Vault
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     VIDEO MODAL
+══════════════════════════════════════════ -->
+<div class="modal-overlay" id="video-modal">
+  <div class="modal-box" style="max-width:780px;">
+    <div class="modal-header">
+      <span>📹</span>
+      <span class="modal-title">שיחת וידאו — Live Session</span>
+      <button class="modal-close" onclick="closeVideo()">✕</button>
+    </div>
+    <div class="modal-body">
+      <iframe id="video-frame" allow="camera; microphone; fullscreen; display-capture; autoplay" frameborder="0"></iframe>
+      <div id="video-fallback" style="display:none;padding:1.5rem 0;">
+        <p style="font-size:0.85rem;color:var(--text2);margin-bottom:1rem;font-style:italic;">לא הוגדר חדר Daily.co. הגדר Domain + Room בהגדרות.</p>
+        <button class="btn btn-ghost" onclick="openSettings()">⚙ פתח הגדרות</button>
       </div>
     </div>
-    <div style="background:#09060388;border:1px solid #e8a02018;padding:1.2rem;">
-      <div style="font-family:'Cinzel',serif;font-size:0.85rem;color:var(--amber);margin-bottom:0.6rem;">🎨 עיצוב</div>
-      <div style="font-size:0.8rem;color:#c9a96e;font-style:italic;">Dark Mode · פונט Cinzel לכותרות, IM Fell English לסיפורים. ניגודיות גבוהה, מינימום הסחות.</div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>⚙️</span>
+      <span class="modal-title">הגדרות</span>
+      <button class="modal-close" onclick="closeSettings()">✕</button>
     </div>
-    <div style="background:#09060388;border:1px solid #e8a02018;padding:1.2rem;">
-      <div style="font-family:'Cinzel',serif;font-size:0.85rem;color:var(--amber);margin-bottom:0.6rem;">📱 מובייל</div>
-      <div style="font-size:0.8rem;color:#c9a96e;font-style:italic;">PWA תואם — שחקנים יכולים לצ'טט ולראות את המפה מהנייד גם בלי מחשב.</div>
+    <div class="modal-body">
+      <div class="settings-content">
+        <div class="settings-section">
+          <div class="settings-section-title">🧠 Anthropic API Key</div>
+          <div class="settings-field">
+            <label>API Key</label>
+            <input type="password" id="s-anthropicKey" placeholder="sk-ant-...">
+            <div class="settings-note">🔒 נשמר מקומית בדפדפן בלבד</div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title">📹 Daily.co</div>
+          <div class="settings-field">
+            <label>Domain</label>
+            <input type="text" id="s-dailyDomain" placeholder="your-team.daily.co">
+          </div>
+          <div class="settings-field">
+            <label>Room Name</label>
+            <input type="text" id="s-dailyRoom" placeholder="rpg-session">
+          </div>
+        </div>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="saveSettings()">שמור</button>
+          <button class="btn btn-danger" onclick="resetApp()">איפוס מלא</button>
+        </div>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- FUTURE -->
-<section id="future">
-  <div class="section-label">// CHAPTER VI</div>
-  <h2 class="section-title">שדרוגים עתידיים</h2>
-  <p class="section-desc">הרעיונות שיהפכו את המערכת לאגדתית.</p>
-
-  <div class="future-grid">
-    <div class="future-card">
-      <div class="future-tag">// V2.0</div>
-      <div class="future-title">⏳ Timeline Slider</div>
-      <div class="future-desc">גרירת ציר זמן לצפייה במפה ובצ'אט כפי שנראו בכל נקודת זמן בעבר.</div>
+<!-- VAULT DOC MODAL -->
+<div class="modal-overlay" id="vault-modal">
+  <div class="modal-box" style="max-width:700px;">
+    <div class="modal-header">
+      <span>📚</span>
+      <span class="modal-title" id="vault-modal-title">מסמך</span>
+      <button class="modal-close" onclick="closeVaultModal()">✕</button>
     </div>
-    <div class="future-card">
-      <div class="future-tag">// V2.1</div>
-      <div class="future-title">🃏 AI Entity Recognition</div>
-      <div class="future-desc">ה-AI מזהה שמות דמויות ובונה להן "תעודת זהות" עם היסטוריה מלאה ב-Vault.</div>
-    </div>
-    <div class="future-card">
-      <div class="future-tag">// V2.2</div>
-      <div class="future-title">🎨 מחולל תמונות</div>
-      <div class="future-desc">יצירת איורים למקומות ומפלצות על בסיס תיאורים מהשיחה הקולית (DALL-E / Flux).</div>
-    </div>
-    <div class="future-card">
-      <div class="future-tag">// V3.0</div>
-      <div class="future-title">🎲 AI Dungeon Master Assistant</div>
-      <div class="future-desc">AI שמציע ל-DM רעיונות עלילתיים בזמן אמת בהתבסס על הסיפור שהתרחש עד כה.</div>
-    </div>
-    <div class="future-card">
-      <div class="future-tag">// V3.1</div>
-      <div class="future-title">📊 Campaign Analytics</div>
-      <div class="future-desc">גרפים וסטטיסטיקות — כמה קרבות, כמה NPC מתו, מה הייתה ההחלטה הכי קריטית.</div>
-    </div>
-    <div class="future-card">
-      <div class="future-tag">// V3.2</div>
-      <div class="future-title">🎵 Ambient Soundscape AI</div>
-      <div class="future-desc">ה-AI מנגן מוזיקת רקע מתאימה אוטומטית לפי האווירה הנוכחית בסיפור.</div>
+    <div class="modal-body">
+      <div class="vault-doc" id="vault-doc-content"></div>
+      <div class="vault-doc-actions">
+        <button class="btn btn-primary" onclick="downloadCurrentDoc()">💾 הורד TXT</button>
+        <button class="btn btn-ghost" onclick="copyCurrentDoc()">📋 העתק</button>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
-<div class="divider" style="padding: 0 2rem;"><div class="divider-line"></div><span class="divider-gem">⚔</span><div class="divider-line"></div></div>
+<!-- LIGHTBOX -->
+<div class="modal-overlay" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="">
+</div>
 
-<footer>
-  <div class="glyphs">⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈ ⚔</div>
-  <div>AI-Powered RPG Storytelling Hub · Project Canvas v1.0</div>
-  <div style="margin-top:0.5rem; color:#e8a02033;">Here be dragons. And also TypeScript.</div>
-</footer>
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- HIDDEN INPUTS -->
+<input type="file" id="map-file-input" accept="image/*" style="display:none" onchange="handleMapUpload(event)">
+
+<!-- ══════════════════════════════════════════
+     FIREBASE SDKs
+══════════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <script>
-  // Sticky nav after hero
-  const nav = document.getElementById('mainNav');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > window.innerHeight * 0.8) {
-      nav.classList.add('visible');
-    } else {
-      nav.classList.remove('visible');
+/* ═══════════════════════════════════════════════════════
+   CONFIG & SETUP
+═══════════════════════════════════════════════════════ */
+const LS = {
+  get: k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set: (k,v) => localStorage.setItem(k, JSON.stringify(v)),
+  remove: k => localStorage.removeItem(k),
+};
+
+let CFG = LS.get('rpg_config') || {};
+let isDemoMode = false;
+
+// Firebase instances
+let db = null, auth = null, rtdb = null, storage = null;
+
+// App state
+let currentUser = { uid: 'demo', name: 'שחקן', avatar: null };
+let currentChannel = 'story';
+let localMessages = {}; // channel -> [msg,...]
+let unsubMessages = null;
+let canvasHistory = [];
+let currentDoc = null;
+let attachedFile = null;
+let mediaRecorder = null;
+let isVoiceRecording = false;
+let sessionRecorder = null;
+let isSessionRecording = false;
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ── SETUP ── */
+function showSetup() {
+  // Pre-fill
+  if (CFG.firebase) {
+    const f = CFG.firebase;
+    ['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId','databaseURL']
+      .forEach(k => { const el = document.getElementById('cfg-'+k); if (el) el.value = f[k]||''; });
+  }
+  if (CFG.anthropicKey) document.getElementById('cfg-anthropicKey').value = CFG.anthropicKey;
+  if (CFG.dailyDomain) document.getElementById('cfg-dailyDomain').value = CFG.dailyDomain;
+  if (CFG.dailyRoom) document.getElementById('cfg-dailyRoom').value = CFG.dailyRoom;
+  showScreen('setup-screen');
+}
+
+function saveSetup() {
+  const apiKey = document.getElementById('cfg-apiKey').value.trim();
+  if (!apiKey) { toast('הכנס Firebase API Key', 'error'); return; }
+  CFG = {
+    firebase: {
+      apiKey,
+      authDomain: document.getElementById('cfg-authDomain').value.trim(),
+      projectId: document.getElementById('cfg-projectId').value.trim(),
+      storageBucket: document.getElementById('cfg-storageBucket').value.trim(),
+      messagingSenderId: document.getElementById('cfg-messagingSenderId').value.trim(),
+      appId: document.getElementById('cfg-appId').value.trim(),
+      databaseURL: document.getElementById('cfg-databaseURL').value.trim(),
+    },
+    anthropicKey: document.getElementById('cfg-anthropicKey').value.trim(),
+    dailyDomain: document.getElementById('cfg-dailyDomain').value.trim(),
+    dailyRoom: document.getElementById('cfg-dailyRoom').value.trim(),
+  };
+  LS.set('rpg_config', CFG);
+  initFirebase();
+  showScreen('login-screen');
+  toast('הגדרות נשמרו', 'success');
+}
+
+function demoMode() {
+  isDemoMode = true;
+  currentUser = { uid: 'demo-' + Math.random().toString(36).slice(2,6), name: 'שחקן-הדגמה', avatar: null };
+  initApp();
+}
+
+/* ── FIREBASE INIT ── */
+function initFirebase() {
+  if (!CFG.firebase || !CFG.firebase.apiKey) return;
+  try {
+    if (firebase.apps.length === 0) {
+      firebase.initializeApp(CFG.firebase);
     }
-  });
+    auth = firebase.auth();
+    db = firebase.firestore();
+    if (CFG.firebase.databaseURL) rtdb = firebase.database();
+    if (CFG.firebase.storageBucket) storage = firebase.storage();
+  } catch(e) {
+    console.error('Firebase init error:', e);
+    toast('שגיאה ב-Firebase: ' + e.message, 'error');
+  }
+}
 
-  // Smooth scroll
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      e.preventDefault();
-      const el = document.querySelector(a.getAttribute('href'));
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  });
+/* ── AUTH ── */
+function signInGoogle() {
+  if (!auth) { toast('Firebase לא מוגדר', 'error'); return; }
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider)
+    .then(result => {
+      const u = result.user;
+      currentUser = { uid: u.uid, name: u.displayName || u.email, avatar: u.photoURL };
+      initApp();
+    })
+    .catch(e => toast('שגיאת כניסה: ' + e.message, 'error'));
+}
 
-  // Entrance animations via IntersectionObserver
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
+/* ── APP INIT ── */
+function initApp() {
+  showScreen('app-screen');
+  updateUserChip();
+  initCanvas();
+  switchChannel(currentChannel, document.querySelector('.channel-tab.active'));
+  loadVault();
+  document.getElementById('session-info').style.display = isDemoMode ? 'none' : 'flex';
+  document.getElementById('session-status').textContent = isDemoMode ? 'הדגמה' : 'מחובר';
+}
+
+function updateUserChip() {
+  document.getElementById('user-name').textContent = currentUser.name;
+  document.getElementById('user-initial').textContent = currentUser.name.charAt(0).toUpperCase();
+}
+
+/* ═══════════════════════════════════════════════════════
+   CHAT
+═══════════════════════════════════════════════════════ */
+const CHANNEL_META = {
+  story:   { icon: '⚔', label: 'עלילה' },
+  general: { icon: '💬', label: 'כללי' },
+  rules:   { icon: '📖', label: 'חוקים' },
+  lore:    { icon: '🌍', label: 'לור' },
+  maps:    { icon: '🗺️', label: 'מפות' },
+};
+
+function switchChannel(ch, btn) {
+  currentChannel = ch;
+  document.querySelectorAll('.channel-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.getElementById('chron-channel').value = ch;
+
+  // Unsubscribe previous listener
+  if (unsubMessages) { unsubMessages(); unsubMessages = null; }
+
+  renderMessages([]);
+  if (isDemoMode) {
+    renderMessages(localMessages[ch] || []);
+  } else if (db) {
+    subscribeToChannel(ch);
+  }
+}
+
+function subscribeToChannel(ch) {
+  if (!db) return;
+  const ref = db.collection('channels').doc(ch).collection('messages')
+    .orderBy('ts', 'asc').limitToLast(100);
+  unsubMessages = ref.onSnapshot(snap => {
+    const msgs = [];
+    snap.forEach(doc => msgs.push({ id: doc.id, ...doc.data() }));
+    renderMessages(msgs);
+  }, err => console.error('Firestore error:', err));
+}
+
+function renderMessages(msgs) {
+  const area = document.getElementById('messages-area');
+  area.innerHTML = '';
+
+  let lastDate = '';
+  msgs.forEach(m => {
+    // Date divider
+    if (m.ts) {
+      const d = new Date(m.ts);
+      const dateStr = d.toLocaleDateString('he-IL', { weekday:'short', day:'numeric', month:'short' });
+      if (dateStr !== lastDate) {
+        lastDate = dateStr;
+        const div = document.createElement('div');
+        div.className = 'day-divider';
+        div.innerHTML = `<div class="day-divider-line"></div><div class="day-divider-text">${dateStr}</div><div class="day-divider-line"></div>`;
+        area.appendChild(div);
       }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.pillar-card, .flow-step, .future-card, .api-section').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(el);
+    }
+    area.appendChild(buildMsgEl(m));
   });
-</script>
+  area.scrollTop = area.scrollHeight;
+}
 
+function buildMsgEl(m) {
+  const el = document.createElement('div');
+  el.className = 'msg' + (m.uid === 'chronicler' ? ' ai-msg' : '');
+
+  const timeStr = m.ts ? new Date(m.ts).toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' }) : '';
+  const initial = (m.name || '?').charAt(0).toUpperCase();
+  const avatarHtml = m.avatar
+    ? `<img src="${m.avatar}" alt="">`
+    : initial;
+
+  let contentHtml = '';
+  if (m.type === 'audio' && m.audioData) {
+    contentHtml = `<div class="msg-audio"><audio controls src="${m.audioData}"></audio></div>`;
+  } else if (m.type === 'image' && m.imageData) {
+    contentHtml = `<div class="msg-image"><img src="${m.imageData}" onclick="openLightbox('${m.imageData}')"></div>`;
+  } else {
+    const safeText = (m.text || '').replace(/</g,'&lt;').replace(/\n/g,'<br>');
+    contentHtml = `<div class="msg-text">${safeText}</div>`;
+  }
+
+  el.innerHTML = `
+    <div class="msg-avatar">${avatarHtml}</div>
+    <div class="msg-body">
+      <div class="msg-header">
+        <span class="msg-name">${m.name || 'אנונימי'}</span>
+        <span class="msg-time">${timeStr}</span>
+      </div>
+      ${contentHtml}
+    </div>
+  `;
+  return el;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('msg-input');
+  const text = input.value.trim();
+  if (!text && !attachedFile) return;
+
+  const msg = {
+    uid: currentUser.uid,
+    name: currentUser.name,
+    avatar: currentUser.avatar || null,
+    ts: Date.now(),
+    channel: currentChannel,
+  };
+
+  if (attachedFile) {
+    await processAttachment(msg);
+  } else {
+    msg.text = text;
+    msg.type = 'text';
+  }
+
+  if (isDemoMode) {
+    if (!localMessages[currentChannel]) localMessages[currentChannel] = [];
+    localMessages[currentChannel].push(msg);
+    renderMessages(localMessages[currentChannel]);
+  } else if (db) {
+    db.collection('channels').doc(currentChannel).collection('messages').add(msg)
+      .catch(e => toast('שגיאה בשליחה: ' + e.message, 'error'));
+  }
+
+  input.value = '';
+  input.style.height = 'auto';
+  clearAttach();
+}
+
+async function processAttachment(msg) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const data = e.target.result;
+      if (attachedFile.type.startsWith('image/')) {
+        msg.type = 'image';
+        msg.imageData = data;
+      } else if (attachedFile.type.startsWith('audio/')) {
+        msg.type = 'audio';
+        msg.audioData = data;
+      } else {
+        msg.type = 'text';
+        msg.text = `📎 קובץ: ${attachedFile.name}`;
+      }
+      resolve();
+    };
+    reader.readAsDataURL(attachedFile);
+  });
+}
+
+function handleInputKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+/* ── ATTACH / VOICE ── */
+function handleAttach(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  attachedFile = file;
+  document.getElementById('upload-preview').classList.add('visible');
+  document.getElementById('upload-name').textContent = file.name;
+}
+
+function clearAttach() {
+  attachedFile = null;
+  document.getElementById('upload-preview').classList.remove('visible');
+  document.getElementById('attach-input').value = '';
+}
+
+async function toggleVoiceMsg() {
+  const btn = document.getElementById('voice-rec-btn');
+  if (!isVoiceRecording) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const chunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = e => chunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        attachedFile = new File([blob], 'voice-msg.webm', { type: 'audio/webm' });
+        document.getElementById('upload-preview').classList.add('visible');
+        document.getElementById('upload-name').textContent = '🎙️ הודעה קולית';
+        stream.getTracks().forEach(t => t.stop());
+      };
+      mediaRecorder.start();
+      isVoiceRecording = true;
+      btn.classList.add('rec-active');
+      btn.textContent = '⏹ עצור';
+      toast('מקליט...', 'success');
+    } catch(e) {
+      toast('שגיאת מיקרופון: ' + e.message, 'error');
+    }
+  } else {
+    mediaRecorder?.stop();
+    isVoiceRecording = false;
+    btn.classList.remove('rec-active');
+    btn.innerHTML = '🎙️ קולי';
+  }
+}
+
+/* ── SESSION RECORDING ── */
+async function toggleRecording() {
+  const btn = document.getElementById('rec-btn');
+  if (!isSessionRecording) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      const chunks = [];
+      sessionRecorder = new MediaRecorder(stream);
+      sessionRecorder.ondataavailable = e => chunks.push(e.data);
+      sessionRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `session-${Date.now()}.webm`; a.click();
+        stream.getTracks().forEach(t => t.stop());
+        toast('הקלטה נשמרה', 'success');
+      };
+      sessionRecorder.start(1000);
+      isSessionRecording = true;
+      btn.classList.add('recording');
+      toast('🔴 מקליט מפגש', 'success');
+    } catch(e) {
+      toast('שגיאת הקלטה: ' + e.message, 'error');
+    }
+  } else {
+    sessionRecorder?.stop();
+    isSessionRecording = false;
+    btn.classList.remove('recording');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   CANVAS
+═══════════════════════════════════════════════════════ */
+let bgCtx, markCtx, bgCanvas, markCanvas;
+let isDrawing = false;
+let currentTool = 'pen';
+let currentColor = '#c87820';
+let brushSize = 3;
+let startX, startY;
+let tempSnapshot = null;
+
+function initCanvas() {
+  bgCanvas = document.getElementById('bg-canvas');
+  markCanvas = document.getElementById('mark-canvas');
+  bgCtx = bgCanvas.getContext('2d');
+  markCtx = markCanvas.getContext('2d');
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  // Load saved marks from localStorage
+  const saved = LS.get('rpg_marks');
+  if (saved) {
+    const img = new Image();
+    img.onload = () => markCtx.drawImage(img, 0, 0);
+    img.src = saved;
+  }
+}
+
+function resizeCanvas() {
+  const wrap = document.getElementById('canvas-wrap');
+  const w = wrap.offsetWidth;
+  const h = wrap.offsetHeight;
+  [bgCanvas, markCanvas].forEach(c => {
+    c.width = w;
+    c.height = h;
+    c.style.width = w + 'px';
+    c.style.height = h + 'px';
+  });
+  // Restore marks after resize
+  const saved = LS.get('rpg_marks');
+  if (saved) {
+    const img = new Image();
+    img.onload = () => markCtx.drawImage(img, 0, 0, w, h);
+    img.src = saved;
+  }
+}
+
+function getPos(e) {
+  const rect = markCanvas.getBoundingClientRect();
+  const touch = e.touches?.[0] || e;
+  return { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
+}
+
+function startDraw(e) {
+  e.preventDefault();
+  const pos = getPos(e);
+  startX = pos.x; startY = pos.y;
+  isDrawing = true;
+  document.getElementById('canvas-hint').classList.add('hidden');
+
+  if (currentTool === 'pen' || currentTool === 'erase') {
+    markCtx.beginPath();
+    markCtx.moveTo(startX, startY);
+  } else {
+    // Snapshot for shape preview
+    tempSnapshot = markCtx.getImageData(0, 0, markCanvas.width, markCanvas.height);
+  }
+
+  if (currentTool === 'text') {
+    const text = prompt('הכנס טקסט:');
+    if (text) {
+      markCtx.font = `${Math.max(14, brushSize * 4)}px Cinzel`;
+      markCtx.fillStyle = currentColor;
+      markCtx.fillText(text, startX, startY);
+      saveMarks();
+    }
+    isDrawing = false;
+  }
+}
+
+function drawing(e) {
+  if (!isDrawing) return;
+  e.preventDefault();
+  const pos = getPos(e);
+
+  if (currentTool === 'pen') {
+    markCtx.globalCompositeOperation = 'source-over';
+    markCtx.strokeStyle = currentColor;
+    markCtx.lineWidth = brushSize;
+    markCtx.lineCap = 'round';
+    markCtx.lineJoin = 'round';
+    markCtx.lineTo(pos.x, pos.y);
+    markCtx.stroke();
+  } else if (currentTool === 'erase') {
+    markCtx.globalCompositeOperation = 'destination-out';
+    markCtx.lineWidth = brushSize * 4;
+    markCtx.lineCap = 'round';
+    markCtx.lineTo(pos.x, pos.y);
+    markCtx.stroke();
+    markCtx.globalCompositeOperation = 'source-over';
+  } else if (tempSnapshot) {
+    // Restore snapshot and redraw shape
+    markCtx.putImageData(tempSnapshot, 0, 0);
+    markCtx.strokeStyle = currentColor;
+    markCtx.fillStyle = currentColor + '44';
+    markCtx.lineWidth = brushSize;
+
+    if (currentTool === 'rect') {
+      markCtx.beginPath();
+      markCtx.rect(startX, startY, pos.x - startX, pos.y - startY);
+      markCtx.fill();
+      markCtx.stroke();
+    } else if (currentTool === 'circle') {
+      const rx = Math.abs(pos.x - startX) / 2;
+      const ry = Math.abs(pos.y - startY) / 2;
+      const cx = startX + (pos.x - startX) / 2;
+      const cy = startY + (pos.y - startY) / 2;
+      markCtx.beginPath();
+      markCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+      markCtx.fill();
+      markCtx.stroke();
+    } else if (currentTool === 'arrow') {
+      drawArrow(markCtx, startX, startY, pos.x, pos.y);
+    }
+  }
+}
+
+function endDraw(e) {
+  if (!isDrawing) return;
+  isDrawing = false;
+  tempSnapshot = null;
+  saveMarks();
+  // Sync to RTDB
+  if (rtdb && !isDemoMode) {
+    const data = markCanvas.toDataURL('image/png', 0.5);
+    rtdb.ref('canvas/marks').set({ data, ts: Date.now(), uid: currentUser.uid });
+  }
+}
+
+function drawArrow(ctx, x1, y1, x2, y2) {
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const len = 14;
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - len * Math.cos(angle - Math.PI/6), y2 - len * Math.sin(angle - Math.PI/6));
+  ctx.lineTo(x2 - len * Math.cos(angle + Math.PI/6), y2 - len * Math.sin(angle + Math.PI/6));
+  ctx.closePath();
+  ctx.fillStyle = currentColor;
+  ctx.fill();
+}
+
+function setTool(t) {
+  currentTool = t;
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tool-' + t)?.classList.add('active');
+  markCanvas.style.cursor = t === 'erase' ? 'cell' : t === 'text' ? 'text' : 'crosshair';
+}
+
+function setColor(c) {
+  currentColor = c;
+  document.querySelectorAll('.color-swatch').forEach(s => {
+    s.classList.toggle('active', s.dataset.color === c);
+  });
+}
+
+function saveMarks() {
+  try {
+    const data = markCanvas.toDataURL('image/png', 0.6);
+    LS.set('rpg_marks', data);
+    canvasHistory.push(data);
+    if (canvasHistory.length > 20) canvasHistory.shift();
+  } catch(e) {}
+}
+
+function undoCanvas() {
+  if (canvasHistory.length < 2) {
+    markCtx.clearRect(0, 0, markCanvas.width, markCanvas.height);
+    canvasHistory = [];
+    LS.remove('rpg_marks');
+    return;
+  }
+  canvasHistory.pop();
+  const prev = canvasHistory[canvasHistory.length - 1];
+  const img = new Image();
+  img.onload = () => {
+    markCtx.clearRect(0, 0, markCanvas.width, markCanvas.height);
+    markCtx.drawImage(img, 0, 0);
+  };
+  img.src = prev;
+}
+
+function clearCanvas() {
+  if (!confirm('לנקות את הלוח?')) return;
+  markCtx.clearRect(0, 0, markCanvas.width, markCanvas.height);
+  canvasHistory = [];
+  LS.remove('rpg_marks');
+  if (rtdb && !isDemoMode) rtdb.ref('canvas/marks').remove();
+}
+
+function downloadCanvas() {
+  // Merge bg + marks
+  const merged = document.createElement('canvas');
+  merged.width = bgCanvas.width;
+  merged.height = bgCanvas.height;
+  const ctx = merged.getContext('2d');
+  ctx.drawImage(bgCanvas, 0, 0);
+  ctx.drawImage(markCanvas, 0, 0);
+  const a = document.createElement('a');
+  a.download = `rpg-map-${Date.now()}.png`;
+  a.href = merged.toDataURL();
+  a.click();
+}
+
+function loadMapImage() {
+  document.getElementById('map-file-input').click();
+}
+
+function handleMapUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+      // Fit image
+      const scale = Math.min(bgCanvas.width / img.width, bgCanvas.height / img.height);
+      const w = img.width * scale, h = img.height * scale;
+      const x = (bgCanvas.width - w) / 2, y = (bgCanvas.height - h) / 2;
+      bgCtx.drawImage(img, x, y, w, h);
+      LS.set('rpg_bg', ev.target.result);
+      document.getElementById('canvas-hint').classList.add('hidden');
+      toast('מפת רקע הועלתה', 'success');
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Load saved background on init
+function loadSavedBg() {
+  const bg = LS.get('rpg_bg');
+  if (bg) {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(bgCanvas.width / img.width, bgCanvas.height / img.height);
+      const w = img.width * scale, h = img.height * scale;
+      bgCtx.drawImage(img, (bgCanvas.width - w) / 2, (bgCanvas.height - h) / 2, w, h);
+      document.getElementById('canvas-hint').classList.add('hidden');
+    };
+    img.src = bg;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   RTDB CANVAS SYNC (multiplayer)
+═══════════════════════════════════════════════════════ */
+function initCanvasSync() {
+  if (!rtdb || isDemoMode) return;
+  rtdb.ref('canvas/marks').on('value', snap => {
+    const val = snap.val();
+    if (!val || val.uid === currentUser.uid) return; // skip own updates
+    const img = new Image();
+    img.onload = () => {
+      markCtx.clearRect(0, 0, markCanvas.width, markCanvas.height);
+      markCtx.drawImage(img, 0, 0, markCanvas.width, markCanvas.height);
+    };
+    img.src = val.data;
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   AI CHRONICLER
+═══════════════════════════════════════════════════════ */
+let lastChroniclerOutput = '';
+
+function openChronicler() {
+  document.getElementById('chronicler-drawer').classList.add('open');
+}
+
+function closeChronicler() {
+  document.getElementById('chronicler-drawer').classList.remove('open');
+}
+
+async function runChronicler() {
+  const key = CFG.anthropicKey || '';
+  if (!key) {
+    document.getElementById('chronicler-output').innerHTML =
+      `<p style="color:var(--red)">❌ לא הוגדר Anthropic API Key. פתח הגדרות ← Anthropic API Key.</p>
+       <button class="btn btn-ghost mt-2" onclick="openSettings()">⚙ הגדרות</button>`;
+    return;
+  }
+
+  const type = document.getElementById('chron-type').value;
+  const channel = document.getElementById('chron-channel').value;
+  const limit = parseInt(document.getElementById('chron-limit').value);
+  const lang = document.getElementById('chron-lang').value;
+  const btn = document.getElementById('chron-btn');
+
+  // Collect messages
+  const msgs = isDemoMode
+    ? (localMessages[channel] || [])
+    : await fetchRecentMessages(channel, limit);
+
+  if (!msgs.length) {
+    document.getElementById('chronicler-output').innerHTML =
+      '<p class="placeholder">אין הודעות בערוץ הנבחר.</p>';
+    return;
+  }
+
+  const msgText = msgs.map(m => {
+    if (m.type === 'text') return `[${m.name}]: ${m.text}`;
+    if (m.type === 'audio') return `[${m.name}]: [הודעה קולית]`;
+    if (m.type === 'image') return `[${m.name}]: [תמונה]`;
+    return '';
+  }).filter(Boolean).join('\n');
+
+  const typePrompts = {
+    session: 'סיכום מפגש RPG — כלול אירועים עיקריים, החלטות, והתפתחויות עלילתיות',
+    battle: 'תיאור קרב דרמטי ומרגש בסגנון ספרותי — כלול תנועות, גיבורים, נפילות',
+    chronicle: 'כרוניקה היסטורית של האירועים — בסגנון ספר עתיק',
+    npc: 'זיהוי דמויות NPC שהוזכרו ובנה להן פרופיל קצר (שם, תפקיד, מאפיינים)',
+    location: 'תיאור המקומות שהוזכרו — אווירה, מאפיינים, היסטוריה',
+  };
+
+  const langInstr = lang === 'he' ? 'כתוב בעברית' : 'Write in English';
+
+  const prompt = `You are "The Chronicler" — a mystical AI archivist for a tabletop RPG group.
+${langInstr}. ${typePrompts[type]}.
+
+Chat log from channel "${channel}":
+${msgText}
+
+Format the output clearly with a title, then the content. Be vivid and immersive.`;
+
+  btn.innerHTML = '<span class="spinner"></span> מעבד...';
+  btn.disabled = true;
+  document.getElementById('chronicler-output').innerHTML = '<div style="display:flex;align-items:center;gap:0.8rem;color:var(--text2);font-style:italic;"><span class="spinner"></span> הכרוניקן כותב...</div>';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-6',
+        max_tokens: 1200,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+
+    const text = data.content?.[0]?.text || '';
+    lastChroniclerOutput = text;
+
+    // Format output
+    const html = text
+      .replace(/^# (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h4 style="color:var(--rune);font-family:var(--font-h);margin:0.8rem 0 0.4rem;">$1</h4>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--amber)">$1</strong>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/^/,'<p>').replace(/$/,'</p>');
+
+    document.getElementById('chronicler-output').innerHTML = html;
+    document.getElementById('save-vault-btn').style.display = 'flex';
+
+  } catch(e) {
+    document.getElementById('chronicler-output').innerHTML =
+      `<p style="color:var(--red)">❌ שגיאה: ${e.message}</p>`;
+  } finally {
+    btn.innerHTML = '✦ צור';
+    btn.disabled = false;
+  }
+}
+
+async function fetchRecentMessages(channel, limit) {
+  if (!db) return [];
+  const snap = await db.collection('channels').doc(channel).collection('messages')
+    .orderBy('ts', 'desc').limit(limit).get();
+  const msgs = [];
+  snap.forEach(doc => msgs.push(doc.data()));
+  return msgs.reverse();
+}
+
+function requestAISummary() {
+  openChronicler();
+  document.getElementById('chron-channel').value = currentChannel;
+  runChronicler();
+}
+
+/* ═══════════════════════════════════════════════════════
+   VAULT
+═══════════════════════════════════════════════════════ */
+function saveToVault() {
+  if (!lastChroniclerOutput) return;
+  const type = document.getElementById('chron-type').value;
+  const entry = {
+    id: Date.now().toString(),
+    title: getVaultTitle(type),
+    content: lastChroniclerOutput,
+    ts: Date.now(),
+    type,
+  };
+
+  if (isDemoMode) {
+    const vault = LS.get('rpg_vault') || [];
+    vault.unshift(entry);
+    LS.set('rpg_vault', vault);
+    loadVault();
+  } else if (db) {
+    db.collection('vault').add(entry)
+      .then(() => { loadVault(); toast('נשמר ב-Vault', 'success'); })
+      .catch(e => toast('שגיאה: ' + e.message, 'error'));
+    return;
+  }
+  toast('נשמר ב-Vault', 'success');
+}
+
+function getVaultTitle(type) {
+  const titles = { session:'סיכום מפגש', battle:'קרב', chronicle:'כרוניקה', npc:'פרופיל NPC', location:'תיאור מקום' };
+  return `${titles[type] || type} · ${new Date().toLocaleDateString('he-IL')}`;
+}
+
+async function loadVault() {
+  const list = document.getElementById('vault-list');
+  let entries = [];
+
+  if (isDemoMode) {
+    entries = LS.get('rpg_vault') || [];
+  } else if (db) {
+    try {
+      const snap = await db.collection('vault').orderBy('ts','desc').limit(20).get();
+      snap.forEach(doc => entries.push({ id: doc.id, ...doc.data() }));
+    } catch(e) {}
+  }
+
+  if (!entries.length) {
+    list.innerHTML = '<div class="vault-empty">הכספת ריקה · בקש מהכרוניקן ליצור סיכום</div>';
+    return;
+  }
+
+  const icons = { session:'📋', battle:'⚔', chronicle:'📜', npc:'🎭', location:'🏰' };
+  list.innerHTML = entries.map(e => `
+    <div class="vault-item" onclick="openVaultDoc(${JSON.stringify(e).replace(/"/g,'&quot;')})">
+      <span class="vault-item-icon">${icons[e.type] || '📄'}</span>
+      <div class="vault-item-info">
+        <div class="vault-item-title">${e.title}</div>
+        <div class="vault-item-meta">${new Date(e.ts).toLocaleDateString('he-IL')}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openVaultDoc(entry) {
+  currentDoc = entry;
+  document.getElementById('vault-modal-title').textContent = entry.title;
+  const html = entry.content
+    .replace(/^# (.+)$/gm, '<h2>$1</h2>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^/,'<p>').replace(/$/,'</p>');
+  document.getElementById('vault-doc-content').innerHTML = html;
+  document.getElementById('vault-modal').classList.add('open');
+}
+
+function closeVaultModal() {
+  document.getElementById('vault-modal').classList.remove('open');
+}
+
+function downloadCurrentDoc() {
+  if (!currentDoc) return;
+  const blob = new Blob([currentDoc.content], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = currentDoc.title.replace(/[^a-zA-Z\u0590-\u05fe0-9 ]/g, '') + '.txt';
+  a.click();
+}
+
+function copyCurrentDoc() {
+  if (!currentDoc) return;
+  navigator.clipboard.writeText(currentDoc.content)
+    .then(() => toast('הועתק ללוח', 'success'))
+    .catch(() => toast('שגיאת העתקה', 'error'));
+}
+
+function toggleVault() {
+  document.getElementById('vault-panel').classList.toggle('collapsed');
+}
+
+/* ═══════════════════════════════════════════════════════
+   VIDEO
+═══════════════════════════════════════════════════════ */
+function openVideo() {
+  const modal = document.getElementById('video-modal');
+  const frame = document.getElementById('video-frame');
+  const fallback = document.getElementById('video-fallback');
+  const domain = CFG.dailyDomain;
+  const room = CFG.dailyRoom || 'rpg-session';
+
+  if (domain) {
+    frame.src = `https://${domain}/${room}`;
+    frame.style.display = 'block';
+    fallback.style.display = 'none';
+  } else {
+    frame.style.display = 'none';
+    fallback.style.display = 'block';
+  }
+  modal.classList.add('open');
+}
+
+function closeVideo() {
+  document.getElementById('video-modal').classList.remove('open');
+  document.getElementById('video-frame').src = '';
+}
+
+/* ═══════════════════════════════════════════════════════
+   SETTINGS
+═══════════════════════════════════════════════════════ */
+function openSettings() {
+  document.getElementById('s-anthropicKey').value = CFG.anthropicKey || '';
+  document.getElementById('s-dailyDomain').value = CFG.dailyDomain || '';
+  document.getElementById('s-dailyRoom').value = CFG.dailyRoom || '';
+  document.getElementById('settings-modal').classList.add('open');
+}
+
+function closeSettings() {
+  document.getElementById('settings-modal').classList.remove('open');
+}
+
+function saveSettings() {
+  CFG.anthropicKey = document.getElementById('s-anthropicKey').value.trim();
+  CFG.dailyDomain = document.getElementById('s-dailyDomain').value.trim();
+  CFG.dailyRoom = document.getElementById('s-dailyRoom').value.trim();
+  LS.set('rpg_config', CFG);
+  closeSettings();
+  toast('הגדרות נשמרו', 'success');
+}
+
+function resetApp() {
+  if (!confirm('למחוק את כל ההגדרות ולאפס?')) return;
+  localStorage.clear();
+  location.reload();
+}
+
+/* ═══════════════════════════════════════════════════════
+   LIGHTBOX
+═══════════════════════════════════════════════════════ */
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+/* ═══════════════════════════════════════════════════════
+   TOASTS
+═══════════════════════════════════════════════════════ */
+function toast(msg, type = '') {
+  const c = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = 'toast' + (type ? ' ' + type : '');
+  el.textContent = msg;
+  c.appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE
+═══════════════════════════════════════════════════════ */
+function toggleMobileCanvas() {
+  document.getElementById('left-panel').classList.toggle('mobile-active');
+}
+
+/* ═══════════════════════════════════════════════════════
+   BOOTSTRAP
+═══════════════════════════════════════════════════════ */
+(function init() {
+  if (CFG.firebase?.apiKey) {
+    initFirebase();
+    showScreen('login-screen');
+  } else {
+    showSetup();
+  }
+
+  // Check auth state if Firebase is ready
+  setTimeout(() => {
+    if (auth) {
+      auth.onAuthStateChanged(user => {
+        if (user && document.getElementById('login-screen').classList.contains('active')) {
+          currentUser = { uid: user.uid, name: user.displayName || user.email, avatar: user.photoURL };
+          initApp();
+        }
+      });
+    }
+  }, 500);
+})();
+
+// After canvas init, also load bg and start sync
+document.addEventListener('DOMContentLoaded', () => {});
+const _origInitApp = initApp;
+initApp = function() {
+  _origInitApp();
+  setTimeout(() => {
+    loadSavedBg();
+    initCanvasSync();
+  }, 100);
+};
+</script>
 </body>
 </html>
