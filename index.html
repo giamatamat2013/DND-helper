@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🗺️ RPG Storytelling Hub — Project Canvas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0804;
+    --parchment: #f5e6c8;
+    --aged: #c9a96e;
+    --amber: #e8a020;
+    --ember: #c0392b;
+    --rune: #5b8a6e;
+    --steel: #8ba0b4;
+    --glow: #e8a02055;
+    --void: #080604;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--void);
+    color: var(--parchment);
+    font-family: 'IM Fell English', serif;
+    font-size: 16px;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 3rem 2rem;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, #1a0e0455 0%, transparent 70%),
+      radial-gradient(ellipse 50% 80% at 20% 80%, #5b1a0a22 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 20%, #0a1a2a33 0%, transparent 60%),
+      #080604;
+  }
+
+  .rune-ring {
+    position: absolute;
+    width: 600px; height: 600px;
+    border: 1px solid #e8a02015;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: spin 40s linear infinite;
+  }
+
+  .rune-ring::before {
+    content: '⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 600px;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    color: #e8a02025;
+    letter-spacing: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .rune-ring-2 {
+    width: 480px; height: 480px;
+    animation: spin 25s linear infinite reverse;
+    border-color: #5b8a6e12;
+  }
+
+  @keyframes spin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+  .hero-content { position: relative; z-index: 1; max-width: 900px; }
+
+  .sigil {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 0 30px #e8a02066);
+    animation: pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { filter: drop-shadow(0 0 30px #e8a02066); }
+    50% { filter: drop-shadow(0 0 60px #e8a020aa); }
+  }
+
+  h1.title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.8rem, 4vw, 3.2rem);
+    font-weight: 900;
+    color: var(--amber);
+    text-shadow: 0 0 40px #e8a02055, 0 2px 0 #5b3000;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  h2.subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+    font-weight: 400;
+    color: var(--steel);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  .hero-tagline {
+    font-size: 1.05rem;
+    color: #c9a96ecc;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    font-style: italic;
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2.5rem; left: 50%;
+    transform: translateX(-50%);
+    color: #e8a02055;
+    font-size: 1.5rem;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex; align-items: center;
+    gap: 1.5rem;
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 0 2rem;
+  }
+  .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--amber), transparent); }
+  .divider-gem { color: var(--amber); font-size: 1.2rem; flex-shrink: 0; }
+
+  /* ── SECTION ── */
+  section {
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+    z-index: 1;
+  }
+
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--rune);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--amber);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px #e8a02033;
+  }
+
+  .section-desc {
+    color: #c9a96ecc;
+    max-width: 680px;
+    margin-bottom: 3rem;
+    font-size: 1rem;
+    font-style: italic;
+  }
+
+  /* ── VISION BLOCK ── */
+  .vision-block {
+    background: linear-gradient(135deg, #12090488 0%, #08100c55 100%);
+    border: 1px solid #e8a02022;
+    border-radius: 2px;
+    padding: 2.5rem 3rem;
+    position: relative;
+    margin-bottom: 4rem;
+  }
+
+  .vision-block::before, .vision-block::after {
+    content: '✦';
+    position: absolute;
+    color: var(--amber);
+    font-size: 1.2rem;
+    opacity: 0.6;
+  }
+  .vision-block::before { top: -0.65rem; left: 1.5rem; background: var(--void); padding: 0 0.5rem; }
+  .vision-block::after { bottom: -0.65rem; right: 1.5rem; background: var(--void); padding: 0 0.5rem; }
+
+  .vision-block p {
+    font-size: 1.1rem;
+    line-height: 2;
+    color: var(--parchment);
+  }
+
+  /* ── PILLARS GRID ── */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5px;
+    background: #e8a02015;
+    border: 1px solid #e8a02022;
+    margin-bottom: 4rem;
+    overflow: hidden;
+  }
+
+  .pillar-card {
+    background: #09060388;
+    padding: 2.2rem 1.8rem;
+    position: relative;
+    cursor: default;
+    transition: background 0.3s;
+  }
+
+  .pillar-card:hover { background: #120a0599; }
+
+  .pillar-icon {
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+    display: block;
+    filter: drop-shadow(0 0 10px currentColor);
+  }
+
+  .pillar-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--rune);
+    margin-bottom: 0.4rem;
+  }
+
+  .pillar-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--amber);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e8a02022;
+    padding-bottom: 0.8rem;
+  }
+
+  .pillar-items { list-style: none; }
+  .pillar-items li {
+    font-size: 0.88rem;
+    color: #c9a96edd;
+    padding: 0.3rem 0;
+    padding-right: 1.2rem;
+    position: relative;
+  }
+  .pillar-items li::before {
+    content: '▸';
+    position: absolute;
+    right: 0;
+    color: var(--rune);
+  }
+
+  /* ── DATA FLOW ── */
+  .flow-container {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    overflow-x: auto;
+    margin-bottom: 4rem;
+    scrollbar-width: thin;
+    scrollbar-color: #e8a02033 transparent;
+  }
+
+  .flow-step {
+    flex: 1;
+    min-width: 180px;
+    background: #09060388;
+    border: 1px solid #e8a02018;
+    padding: 1.8rem 1.5rem;
+    position: relative;
+    text-align: center;
+  }
+
+  .flow-step + .flow-step {
+    border-right: none;
+  }
+
+  .flow-step:first-child { border-right: none; }
+
+  .flow-arrow {
+    position: absolute;
+    left: -20px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--amber);
+    font-size: 1.5rem;
+    z-index: 2;
+  }
+
+  .flow-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--rune);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.8rem;
+  }
+
+  .flow-icon { font-size: 2rem; margin-bottom: 0.8rem; display: block; }
+
+  .flow-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: var(--amber);
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+
+  .flow-desc {
+    font-size: 0.8rem;
+    color: #c9a96ebb;
+    font-style: italic;
+  }
+
+  /* ── API CONFIG TABLE ── */
+  .api-section {
+    background: #09060388;
+    border: 1px solid #5b8a6e33;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .api-section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--rune);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .api-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to left, transparent, #5b8a6e44);
+  }
+
+  .api-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  .api-table th {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--steel);
+    text-align: right;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #e8a02020;
+    text-transform: uppercase;
+  }
+
+  .api-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #ffffff08;
+    vertical-align: top;
+  }
+
+  .api-table tr:last-child td { border-bottom: none; }
+  .api-table tr:hover td { background: #ffffff04; }
+
+  .api-name {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--amber);
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+
+  .api-purpose { color: var(--parchment); }
+  .api-tier { color: #c9a96e; font-style: italic; font-size: 0.8rem; }
+
+  .badge {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 1px;
+    text-transform: uppercase;
+  }
+
+  .badge-free { background: #5b8a6e22; color: var(--rune); border: 1px solid #5b8a6e44; }
+  .badge-paid { background: #c0392b22; color: #e74c3c; border: 1px solid #c0392b44; }
+  .badge-key  { background: #e8a02022; color: var(--amber); border: 1px solid #e8a02044; }
+  .badge-optional { background: #8ba0b422; color: var(--steel); border: 1px solid #8ba0b444; }
+
+  /* ── ENV BLOCK ── */
+  .env-block {
+    background: #030201;
+    border: 1px solid #5b8a6e33;
+    border-radius: 1px;
+    padding: 1.5rem 2rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 2;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .env-block::before {
+    content: '.env.example';
+    position: absolute;
+    top: 0.6rem; left: 1.5rem;
+    font-size: 0.65rem;
+    color: var(--rune);
+    letter-spacing: 0.2em;
+  }
+
+  .env-block pre { margin-top: 1.5rem; }
+
+  .env-comment { color: #5b8a6e99; }
+  .env-key { color: var(--amber); }
+  .env-val { color: var(--steel); }
+  .env-placeholder { color: #c0392b88; }
+
+  /* ── UI LAYOUT DIAGRAM ── */
+  .ui-diagram {
+    border: 1px solid #e8a02022;
+    background: #09060388;
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+
+  .ui-diagram-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--steel);
+    letter-spacing: 0.2em;
+    margin-bottom: 1rem;
+  }
+
+  .ui-layout {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    gap: 0;
+    min-height: 280px;
+    border: 1px solid #e8a02015;
+  }
+
+  .ui-pane {
+    padding: 1.2rem;
+    position: relative;
+  }
+
+  .ui-pane-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: var(--amber);
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    border-bottom: 1px dashed #e8a02022;
+    padding-bottom: 0.5rem;
+  }
+
+  .ui-divider { background: #e8a02020; }
+
+  .mock-chat {
+    display: flex; flex-direction: column; gap: 0.6rem;
+  }
+
+  .mock-msg {
+    background: #ffffff08;
+    border-radius: 1px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.72rem;
+    color: #c9a96ecc;
+  }
+
+  .mock-msg.mine {
+    background: #5b8a6e18;
+    text-align: left;
+    border-right: 2px solid var(--rune);
+  }
+
+  .mock-msg .sender {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--amber);
+    margin-bottom: 0.2rem;
+    display: block;
+  }
+
+  .mock-map {
+    border: 1px dashed #e8a02025;
+    height: 120px;
+    display: flex; align-items: center; justify-content: center;
+    color: #e8a02033;
+    font-size: 2.5rem;
+    margin-bottom: 0.8rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mock-map::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(#e8a02008 1px, transparent 1px),
+      linear-gradient(90deg, #e8a02008 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .mock-dot {
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 8px var(--amber);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .mock-dot:nth-child(2) { top: 30%; left: 40%; animation-delay: 0.5s; background: var(--rune); }
+  .mock-dot:nth-child(3) { top: 60%; left: 65%; animation-delay: 1s; background: #e74c3c; }
+
+  /* ── FUTURE ITEMS ── */
+  .future-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .future-card {
+    border: 1px solid #e8a02015;
+    background: #09060355;
+    padding: 1.5rem;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+
+  .future-card:hover { border-color: #e8a02044; }
+
+  .future-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--steel);
+    letter-spacing: 0.25em;
+    margin-bottom: 0.5rem;
+  }
+
+  .future-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    color: var(--amber);
+    margin-bottom: 0.5rem;
+  }
+
+  .future-desc {
+    font-size: 0.85rem;
+    color: #c9a96ecc;
+    font-style: italic;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid #e8a02015;
+    padding: 3rem 2rem;
+    text-align: center;
+    color: #c9a96e55;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+  }
+
+  footer .glyphs {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #e8a02022;
+    letter-spacing: 0.5em;
+  }
+
+  /* ── STICKY NAV ── */
+  nav {
+    position: fixed;
+    top: 0; right: 0; left: 0;
+    z-index: 100;
+    background: #08060388;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e8a02015;
+    padding: 0.8rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    transform: translateY(-100%);
+    transition: transform 0.3s;
+  }
+
+  nav.visible { transform: translateY(0); }
+
+  .nav-brand {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: var(--amber);
+    white-space: nowrap;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--steel);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--amber); }
+
+  /* ── STATUS CHIPS ── */
+  .status-row {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .status-chip {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid #e8a02025;
+    color: var(--aged);
+    text-transform: uppercase;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--rune);
+    box-shadow: 0 0 6px var(--rune);
+    animation: pulse 2s infinite;
+  }
+
+  .status-dot.warn { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+  .status-dot.danger { background: #e74c3c; box-shadow: 0 0 6px #e74c3c; animation: none; }
+
+  @media (max-width: 600px) {
+    .pillars-grid { grid-template-columns: 1fr; }
+    .flow-container { flex-direction: column; }
+    .flow-arrow { display: none; }
+    .ui-layout { grid-template-columns: 1fr; }
+    .ui-divider { display: none; }
+    .api-table td:nth-child(3) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STICKY NAV -->
+<nav id="mainNav">
+  <span class="nav-brand">⚔ RPG Hub</span>
+  <ul class="nav-links">
+    <li><a href="#vision">חזון</a></li>
+    <li><a href="#pillars">עמודי תווך</a></li>
+    <li><a href="#flow">זרימת נתונים</a></li>
+    <li><a href="#apis">הגדרות API</a></li>
+    <li><a href="#ui">ממשק</a></li>
+    <li><a href="#future">עתיד</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="rune-ring"></div>
+  <div class="rune-ring rune-ring-2"></div>
+  <div class="hero-content">
+    <div class="sigil">🗺️</div>
+    <h1 class="title">AI-Powered RPG<br>Storytelling Hub</h1>
+    <h2 class="subtitle">Project Vision Canvas · v1.0</h2>
+    <p class="hero-tagline">
+      מרכז פיקוד דיגיטלי לקבוצת חברים המשחקים משחק תפקידים סיפורי —
+      שיח חי הופך לנכס דיגיטלי מתועד, מנוהל על ידי בינה מלאכותית.
+    </p>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-gem">◈</span>
+      <div class="divider-line"></div>
+    </div>
+  </div>
+  <div class="scroll-indicator">▾</div>
+</div>
+
+<!-- VISION -->
+<section id="vision">
+  <div class="section-label">// CHAPTER I</div>
+  <h2 class="section-title">חזון המערכת</h2>
+  <div class="vision-block">
+    <p>
+      יצירת <strong style="color:var(--amber)">"מרכז פיקוד" דיגיטלי</strong> לקבוצת חברים המשחקים משחק תפקידים סיפורי.
+      המערכת הופכת את השיח החי — קול, וידאו, צ'אט — ל<strong style="color:var(--rune)">נכס דיגיטלי מתועד, מאורגן ומנוהל</strong>
+      על ידי בינה מלאכותית, תוך שילוב לוח טקטי אינטראקטיבי. כל שיחה, כל קרב, כל החלטה עלילתית —
+      נשמרת, מסוכמת ומוכנה להמשך.
+    </p>
+  </div>
+
+  <div class="status-row">
+    <div class="status-chip"><span class="status-dot"></span> Phase: Design</div>
+    <div class="status-chip"><span class="status-dot warn"></span> APIs: Pending Config</div>
+    <div class="status-chip"><span class="status-dot danger"></span> Backend: Not Deployed</div>
+    <div class="status-chip"><span class="status-dot"></span> Target: GitHub Pages</div>
+  </div>
+</section>
+
+<div class="divider" style="padding: 0 2rem;"><div class="divider-line"></div><span class="divider-gem">⚔</span><div class="divider-line"></div></div>
+
+<!-- PILLARS -->
+<section id="pillars">
+  <div class="section-label">// CHAPTER II</div>
+  <h2 class="section-title">ארבעת עמודי התווך</h2>
+  <p class="section-desc">כל מערכת נשענת על ארבעה ממדים — תקשורת, אינטליגנציה, ארכיון, לוח טקטי.</p>
+
+  <div class="pillars-grid">
+    <div class="pillar-card">
+      <span class="pillar-icon" style="color:#8ba0b4;">📡</span>
+      <div class="pillar-num">// PILLAR I</div>
+      <div class="pillar-title">ערוצי תקשורת</div>
+      <ul class="pillar-items">
+        <li>צ'אט רב-ערוצי לפי נושאים (עלילה, חוקים, לור)</li>
+        <li>הודעות קוליות, סרטונים, תמונות וקבצים</li>
+        <li>שיחת וידאו / אודיו לייב עם הקלטה</li>
+        <li>הקלטה נפרדת לכל משתתף (לתמלול)</li>
+        <li>מטא-דאטה אוטומטי: שולח, זמן, ערוץ</li>
+      </ul>
+    </div>
+
+    <div class="pillar-card">
+      <span class="pillar-icon" style="color:#e8a020;">🧠</span>
+      <div class="pillar-num">// PILLAR II</div>
+      <div class="pillar-title">המוח — AI Intelligence</div>
+      <ul class="pillar-items">
+        <li>הכרוניקן: תמלולים → סיפורים מובנים</li>
+        <li>ייצוא PDF/Markdown/Word לדרייב</li>
+        <li>ממשק פקודות טבעי לבקשות מה-AI</li>
+        <li>זיהוי הקשר לפי ערוץ (מפות / סיפור)</li>
+        <li>ניתוח תמונות, ניתוח עלילה, סיכומי קרב</li>
+      </ul>
+    </div>
+
+    <div class="pillar-card">
+      <span class="pillar-icon" style="color:#5b8a6e;">🗄️</span>
+      <div class="pillar-num">// PILLAR III</div>
+      <div class="pillar-title">המאגר — The Archive</div>
+      <ul class="pillar-items">
+        <li>Firebase Firestore לנתונים בזמן אמת</li>
+        <li>חיבור ישיר ל-Google Drive</li>
+        <li>כספת קבצים — מסונן לפי תאריך ונושא</li>
+        <li>שמירת מצב מלאה (State Persistence)</li>
+        <li>המשכיות — חזרה לנקודה כלשהי בעבר</li>
+      </ul>
+    </div>
+
+    <div class="pillar-card">
+      <span class="pillar-icon" style="color:#c0392b;">⚔️</span>
+      <div class="pillar-num">// PILLAR IV</div>
+      <div class="pillar-title">הלוח הטקטי</div>
+      <ul class="pillar-items">
+        <li>מפה אינטראקטיבית בזמן אמת (Multiplayer)</li>
+        <li>כלי ציור: חצים, אזורים, צבעים</li>
+        <li>שכבות: רקע, סימוני שחקנים, DM</li>
+        <li>סנכרון עם Firebase RTDB</li>
+        <li>ייצוא תמונת מצב למסמך הסיכום</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- DATA FLOW -->
+<section id="flow" style="padding-top: 0;">
+  <div class="section-label">// CHAPTER III</div>
+  <h2 class="section-title">זרימת הנתונים</h2>
+  <p class="section-desc">מהקלט הגולמי ועד לקובץ המוגמר בדרייב — כל שלב בצינור.</p>
+
+  <div class="flow-container">
+    <div class="flow-step">
+      <div class="flow-num">STEP 01</div>
+      <span class="flow-icon">🎙️</span>
+      <div class="flow-title">קלט</div>
+      <div class="flow-desc">שחקנים מדברים בוידאו / כותבים בצ'אט</div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-arrow">▸</div>
+      <div class="flow-num">STEP 02</div>
+      <span class="flow-icon">⚙️</span>
+      <div class="flow-title">עיבוד</div>
+      <div class="flow-desc">Speech-to-Text + שמירת ציורים כנתונים וקטוריים</div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-arrow">▸</div>
+      <div class="flow-num">STEP 03</div>
+      <span class="flow-icon">💬</span>
+      <div class="flow-title">בקשת משתמש</div>
+      <div class="flow-desc">"סכם את הקרב האחרון כקובץ וורד ושים בדרייב"</div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-arrow">▸</div>
+      <div class="flow-num">STEP 04</div>
+      <span class="flow-icon">🤖</span>
+      <div class="flow-title">AI זיקוק</div>
+      <div class="flow-desc">Claude / GPT-4 מעבד ומזקק את התמלול</div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-arrow">▸</div>
+      <div class="flow-num">STEP 05</div>
+      <span class="flow-icon">📄</span>
+      <div class="flow-title">פלט</div>
+      <div class="flow-desc">PDF עם טקסט + צילום מסך מפה → Drive → לינק בצ'אט</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="padding: 0 2rem;"><div class="divider-line"></div><span class="divider-gem">◈</span><div class="divider-line"></div></div>
+
+<!-- API CONFIG -->
+<section id="apis">
+  <div class="section-label">// CHAPTER IV — הגדרות</div>
+  <h2 class="section-title">מפת ה-APIs וההגדרות</h2>
+  <p class="section-desc">כל שירות חיצוני שהמערכת זקוקה לו, עלותו, ואופן ההגדרה.</p>
+
+  <!-- Firebase -->
+  <div class="api-section">
+    <div class="api-section-title">🔥 Firebase (Google) — ליבת ה-Backend</div>
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th>שירות</th>
+          <th>מטרה</th>
+          <th>עלות</th>
+          <th>סטטוס</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="api-name">Firebase Auth</span></td>
+          <td class="api-purpose">התחברות עם Google / Email לכל שחקן</td>
+          <td class="api-tier">Free Tier (10K/month)</td>
+          <td><span class="badge badge-free">חינם</span></td>
+        </tr>
+        <tr>
+          <td><span class="api-name">Firestore</span></td>
+          <td class="api-purpose">נתוני צ'אט, פרופילי שחקנים, מטא-דאטה</td>
+          <td class="api-tier">50K reads / 20K writes free/day</td>
+          <td><span class="badge badge-free">חינם</span></td>
+        </tr>
+        <tr>
+          <td><span class="api-name">Realtime Database</span></td>
+          <td class="api-purpose">מצב הלוח הטקטי בזמן אמת</td>
+          <td class="api-tier">1GB storage, 10GB transfer free</td>
+          <td><span class="badge badge-free">חינם</span></td>
+        </tr>
+        <tr>
+          <td><span class="api-name">Firebase Storage</span></td>
+          <td class="api-purpose">קבצים, הקלטות, תמונות מפות</td>
+          <td class="api-tier">5GB free</td>
+          <td><span class="badge badge-free">חינם</span></td>
+        </tr>
+        <tr>
+          <td><span class="api-name">Firebase Functions</span></td>
+          <td class="api-purpose">לוגיקת שרת (AI Calls, Drive export)</td>
+          <td class="api-tier">125K invocations free / לא זמין בGitHub Pages</td>
+          <td><span class="badge badge-optional">שרת נפרד</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:1.5rem; font-size:0.8rem; color:#5b8a6e; font-family:'Share Tech Mono',monospace;">
+      → console.firebase.google.com | צור Project חדש | הפעל Authentication + Firestore + RTDB
+    </div>
+  </div>
+
+  <!-- AI -->
+  <div class="api-section">
+    <div class="api-section-title">🧠 AI / LLM — הכרוניקן</div>
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th>שירות</th>
+          <th>מטרה</th>
+          <th>עלות</th>
+          <th>סטטוס</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="api-name">Anthropic Claude API</span></td>
+          <td class="api-purpose">סיכומים, ניתוח עלילה, יצירת מסמכים</td>
+          <td class="api-tier">~$3 / 1M tokens (Sonnet)</td>
+          <td><span class="badge badge-key">API Key</span></td>
+        </tr>
+        <tr>
+          <td><span class="api-name">OpenAI GPT-4o</span></td>
+          <td class="api-purpose">אלטרנטיבה, ניתוח תמונות מפות</td>
+          <td class="api-tier">~$5 / 1M tokens</td>
+          <td><span class="badge badge-optional">אופציונלי</span></td>
+        </tr>
+        <tr>
+          <td><span class="api-name">OpenAI Whisper</span></td>
+          <td class="api-purpose">Speech-to-Text להקלטות</td>
+          <td class="api-tier">$0.006 / minute</td>
+          <td><span class="badge badge-key">API Key</span></td>
+        </tr>
+        <tr>
+          <td><span class="api-name">Web Speech API</span></td>
+          <td class="api-purpose">Speech-to-Text בדפדפן (ללא עלות)</td>
+          <td class="api-tier">Chrome/Edge בלבד</td>
+          <td><span class="badge badge-free">חינם</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:1.5rem; font-size:0.8rem; color:#e8a02077; font-family:'Share Tech Mono',monospace;">
+      ⚠ API Keys חייבים לגור ב-Firebase Functions בלבד — לעולם לא בקוד Frontend!
+    </div>
+  </div>
+
+  <!-- Video -->
+  <div class="api-section">
+    <div class="api-section-title">📹 וידאו ואודיו לייב</div>
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th>שירות</th>
+          <th>מטרה</th>
+          <th>עלות</th>
+          <th>סטטוס</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="api-name">Daily.co SDK</span></td>
+          <td class="api-purpose">וידאו + אודיו P2P, הקלטה לכל משתתף</td>
+          <td class="api-tier">Free: 10K min/month | $0.004/min beyond</td>
+          <td><span class="badge badge-free">מומלץ</span></td>
+        </tr>
+        <tr>
+          <td><span class="api-name">LiveKit</span></td>
+          <td class="api-purpose">WebRTC עצמי, open-source, self-hosted</td>
+          <td class="api-tier">Self-hosted = חינם, Cloud = $</td>
+          <td><span class="badge badge-optional">אלטרנטיבה</span></td>
+        </tr>
+        <tr>
+          <td><span class="api-name">WebRTC Native</span></td>
+          <td class="api-purpose">P2P ישיר בין שחקנים (ללא שרת)</td>
+          <td class="api-tier">STUN/TURN חינם + TURN שרת $</td>
+          <td><span class="badge badge-optional">מורכב</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Google Drive -->
+  <div class="api-section">
+    <div class="api-section-title">📂 Google Drive — The Archive</div>
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th>שירות</th>
+          <th>מטרה</th>
+          <th>עלות</th>
+          <th>סטטוס</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="api-name">Google Drive API v3</span></td>
+          <td class="api-purpose">העלאה/הורדה אוטומטית של קבצי AI</td>
+          <td class="api-tier">Free (בתוך quota)</td>
+          <td><span class="badge badge-key">OAuth2</span></td>
+        </tr>
+        <tr>
+          <td><span class="api-name">Google Docs API</span></td>
+          <td class="api-purpose">יצירת מסמכי סיכום ישירות</td>
+          <td class="api-tier">Free</td>
+          <td><span class="badge badge-optional">אופציונלי</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:1.5rem; font-size:0.8rem; color:#5b8a6e; font-family:'Share Tech Mono',monospace;">
+      → console.cloud.google.com | Enable Drive API | OAuth 2.0 Credentials | Scopes: drive.file
+    </div>
+  </div>
+
+  <!-- .env example -->
+  <div class="env-block">
+    <pre>
+<span class="env-comment"># ── Firebase ──────────────────────────────────────</span>
+<span class="env-key">VITE_FIREBASE_API_KEY</span>=<span class="env-placeholder">YOUR_FIREBASE_API_KEY</span>
+<span class="env-key">VITE_FIREBASE_AUTH_DOMAIN</span>=<span class="env-placeholder">your-project.firebaseapp.com</span>
+<span class="env-key">VITE_FIREBASE_PROJECT_ID</span>=<span class="env-placeholder">your-project-id</span>
+<span class="env-key">VITE_FIREBASE_STORAGE_BUCKET</span>=<span class="env-placeholder">your-project.appspot.com</span>
+<span class="env-key">VITE_FIREBASE_MESSAGING_SENDER_ID</span>=<span class="env-placeholder">123456789</span>
+<span class="env-key">VITE_FIREBASE_APP_ID</span>=<span class="env-placeholder">1:123:web:abc123</span>
+<span class="env-key">VITE_FIREBASE_DATABASE_URL</span>=<span class="env-placeholder">https://your-project-default-rtdb.firebaseio.com</span>
+
+<span class="env-comment"># ── AI APIs (ב-Firebase Functions בלבד!) ──────────</span>
+<span class="env-key">ANTHROPIC_API_KEY</span>=<span class="env-placeholder">sk-ant-...</span>
+<span class="env-key">OPENAI_API_KEY</span>=<span class="env-placeholder">sk-...</span>
+
+<span class="env-comment"># ── Video (Daily.co) ─────────────────────────────</span>
+<span class="env-key">VITE_DAILY_DOMAIN</span>=<span class="env-placeholder">your-domain.daily.co</span>
+<span class="env-key">DAILY_API_KEY</span>=<span class="env-placeholder">secret-key (Functions only)</span>
+
+<span class="env-comment"># ── Google OAuth ─────────────────────────────────</span>
+<span class="env-key">VITE_GOOGLE_CLIENT_ID</span>=<span class="env-placeholder">xxx.apps.googleusercontent.com</span>
+    </pre>
+  </div>
+</section>
+
+<!-- UI CONCEPT -->
+<section id="ui" style="padding-top: 2rem;">
+  <div class="section-label">// CHAPTER V</div>
+  <h2 class="section-title">חוויית המשתמש — UI/UX Concept</h2>
+  <p class="section-desc">מסך חצוי: פעולה חיה מימין, תיעוד ותכנון משמאל.</p>
+
+  <div class="ui-diagram">
+    <div class="ui-diagram-label">// WIREFRAME CONCEPT — מסך ראשי</div>
+    <div class="ui-layout">
+      <div class="ui-pane">
+        <div class="ui-pane-title">◈ הלוח הטקטי + Vault</div>
+        <div class="mock-map">
+          <span style="position:relative;z-index:1;">🗺️</span>
+          <div class="mock-dot" style="top:25%;left:30%;"></div>
+          <div class="mock-dot"></div>
+          <div class="mock-dot"></div>
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <div style="flex:1;background:#e8a02011;border:1px solid #e8a02022;padding:0.6rem;font-size:0.72rem;color:#c9a96e;font-family:'Share Tech Mono',monospace;">
+            📄 קרב הדרקון.pdf<br>
+            <span style="color:#5b8a6e;font-size:0.6rem;">14.3.25 · Chapter 3</span>
+          </div>
+          <div style="flex:1;background:#5b8a6e11;border:1px solid #5b8a6e22;padding:0.6rem;font-size:0.72rem;color:#c9a96e;font-family:'Share Tech Mono',monospace;">
+            📜 סיכום מפגש 7<br>
+            <span style="color:#5b8a6e;font-size:0.6rem;">07.3.25 · Chronicle</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ui-divider"></div>
+
+      <div class="ui-pane">
+        <div class="ui-pane-title">◈ צ'אט + וידאו לייב</div>
+        <div class="mock-chat">
+          <div class="mock-msg">
+            <span class="sender">🧙 Arad [עלילה]</span>
+            הדרקון מניף כנף — כולם מתחבאים?
+          </div>
+          <div class="mock-msg mine">
+            <span class="sender">⚔ Noa [עלילה]</span>
+            אני מנסה להסתתר מאחורי הסלע הגדול
+          </div>
+          <div class="mock-msg" style="background:#e8a02011;border-right:2px solid var(--amber);">
+            <span class="sender">🤖 Chronicler [AI]</span>
+            הפקד סיכום הפלטה ה-3 נוצר ← Drive
+          </div>
+        </div>
+        <div style="margin-top:1rem;padding:0.5rem 0.8rem;background:#ffffff05;border:1px dashed #e8a02022;font-size:0.72rem;color:#8ba0b4;font-family:'Share Tech Mono',monospace;display:flex;gap:0.5rem;align-items:center;">
+          <span style="color:#e74c3c;">●</span> REC · 00:47:23 · 4 משתתפים
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.5rem;">
+    <div style="background:#09060388;border:1px solid #e8a02018;padding:1.2rem;">
+      <div style="font-family:'Cinzel',serif;font-size:0.85rem;color:var(--amber);margin-bottom:0.6rem;">🎮 DM Control Bar</div>
+      <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+        <div style="background:#c0392b22;border:1px solid #c0392b44;padding:0.3rem 0.6rem;font-size:0.65rem;font-family:'Share Tech Mono',monospace;color:#e74c3c;">⏺ הקלט</div>
+        <div style="background:#e8a02022;border:1px solid #e8a02044;padding:0.3rem 0.6rem;font-size:0.65rem;font-family:'Share Tech Mono',monospace;color:var(--amber);">🗺 החלף מפה</div>
+        <div style="background:#5b8a6e22;border:1px solid #5b8a6e44;padding:0.3rem 0.6rem;font-size:0.65rem;font-family:'Share Tech Mono',monospace;color:var(--rune);">📜 סיכם AI</div>
+      </div>
+    </div>
+    <div style="background:#09060388;border:1px solid #e8a02018;padding:1.2rem;">
+      <div style="font-family:'Cinzel',serif;font-size:0.85rem;color:var(--amber);margin-bottom:0.6rem;">🎨 עיצוב</div>
+      <div style="font-size:0.8rem;color:#c9a96e;font-style:italic;">Dark Mode · פונט Cinzel לכותרות, IM Fell English לסיפורים. ניגודיות גבוהה, מינימום הסחות.</div>
+    </div>
+    <div style="background:#09060388;border:1px solid #e8a02018;padding:1.2rem;">
+      <div style="font-family:'Cinzel',serif;font-size:0.85rem;color:var(--amber);margin-bottom:0.6rem;">📱 מובייל</div>
+      <div style="font-size:0.8rem;color:#c9a96e;font-style:italic;">PWA תואם — שחקנים יכולים לצ'טט ולראות את המפה מהנייד גם בלי מחשב.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FUTURE -->
+<section id="future">
+  <div class="section-label">// CHAPTER VI</div>
+  <h2 class="section-title">שדרוגים עתידיים</h2>
+  <p class="section-desc">הרעיונות שיהפכו את המערכת לאגדתית.</p>
+
+  <div class="future-grid">
+    <div class="future-card">
+      <div class="future-tag">// V2.0</div>
+      <div class="future-title">⏳ Timeline Slider</div>
+      <div class="future-desc">גרירת ציר זמן לצפייה במפה ובצ'אט כפי שנראו בכל נקודת זמן בעבר.</div>
+    </div>
+    <div class="future-card">
+      <div class="future-tag">// V2.1</div>
+      <div class="future-title">🃏 AI Entity Recognition</div>
+      <div class="future-desc">ה-AI מזהה שמות דמויות ובונה להן "תעודת זהות" עם היסטוריה מלאה ב-Vault.</div>
+    </div>
+    <div class="future-card">
+      <div class="future-tag">// V2.2</div>
+      <div class="future-title">🎨 מחולל תמונות</div>
+      <div class="future-desc">יצירת איורים למקומות ומפלצות על בסיס תיאורים מהשיחה הקולית (DALL-E / Flux).</div>
+    </div>
+    <div class="future-card">
+      <div class="future-tag">// V3.0</div>
+      <div class="future-title">🎲 AI Dungeon Master Assistant</div>
+      <div class="future-desc">AI שמציע ל-DM רעיונות עלילתיים בזמן אמת בהתבסס על הסיפור שהתרחש עד כה.</div>
+    </div>
+    <div class="future-card">
+      <div class="future-tag">// V3.1</div>
+      <div class="future-title">📊 Campaign Analytics</div>
+      <div class="future-desc">גרפים וסטטיסטיקות — כמה קרבות, כמה NPC מתו, מה הייתה ההחלטה הכי קריטית.</div>
+    </div>
+    <div class="future-card">
+      <div class="future-tag">// V3.2</div>
+      <div class="future-title">🎵 Ambient Soundscape AI</div>
+      <div class="future-desc">ה-AI מנגן מוזיקת רקע מתאימה אוטומטית לפי האווירה הנוכחית בסיפור.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="padding: 0 2rem;"><div class="divider-line"></div><span class="divider-gem">⚔</span><div class="divider-line"></div></div>
+
+<footer>
+  <div class="glyphs">⚔ ◈ ✦ ◈ ⚔ ◈ ✦ ◈ ⚔</div>
+  <div>AI-Powered RPG Storytelling Hub · Project Canvas v1.0</div>
+  <div style="margin-top:0.5rem; color:#e8a02033;">Here be dragons. And also TypeScript.</div>
+</footer>
+
+<script>
+  // Sticky nav after hero
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > window.innerHeight * 0.8) {
+      nav.classList.add('visible');
+    } else {
+      nav.classList.remove('visible');
+    }
+  });
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const el = document.querySelector(a.getAttribute('href'));
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Entrance animations via IntersectionObserver
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.pillar-card, .flow-step, .future-card, .api-section').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
