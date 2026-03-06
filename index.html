@@ -727,11 +727,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Crimso
     <div class="mbody">
       <div class="stsec">
         <h4>🤖 כרוניקן AI</h4>
-        <label class="stlabel">Anthropic API Key</label>
-        <input type="password" id="akey" class="stin" placeholder="sk-ant-api03-..." dir="ltr"
+        <label class="stlabel">Groq API Key</label>
+        <input type="password" id="akey" class="stin" placeholder="gsk_..." dir="ltr"
           style="font-family:'JetBrains Mono',monospace;font-size:13px">
-        <p class="stnote">המפתח נשמר בדפדפן בלבד (localStorage) ואינו עולה לשרת.</p>
-        <p class="stnote" style="margin-top:4px">ניתן לקבל מפתח ב: <a href="https://console.anthropic.com" target="_blank" style="color:var(--gold)">console.anthropic.com</a></p>
+        <p class="stnote">המפתח נשמר בחשבון שלך ב-Firebase ומוצפן בתעבורה.</p>
+        <p class="stnote" style="margin-top:4px">ניתן לקבל מפתח חינמי ב: <a href="https://console.groq.com/keys" target="_blank" style="color:var(--gold)">console.groq.com/keys</a></p>
       </div>
       <div class="stsec">
         <h4>👤 פרופיל</h4>
@@ -915,7 +915,10 @@ function showApp(){
   g('ome').textContent=nm;
   g('hroom-code').textContent=roomCode||'—';
   g('stname').value=nm;
-  g('akey').value=localStorage.getItem('akey')||'';
+  // Load groq key from Firestore
+  getDoc(doc(db,'users',cu.uid)).then(s=>{
+    if(s.exists()&&s.data().groqKey) g('akey').value=s.data().groqKey;
+  }).catch(()=>{});
   initCanvas();
   swch('story');
   loadVault();
@@ -1121,9 +1124,14 @@ window.openCMode = m => {
 };
 
 window.runChro = async () => {
-  const key=localStorage.getItem('akey');
-  if(!key){toast('נא להגדיר API Key בהגדרות ⚙');closeM('mchro');openSettings();return;}
-  
+  // Load key from Firestore (fresh read every time)
+  let key = '';
+  try {
+    const s = await getDoc(doc(db,'users',cu.uid));
+    key = s.exists() ? (s.data().groqKey||'') : '';
+  } catch(e){}
+  if(!key){ toast('נא להגדיר Groq API Key בהגדרות ⚙'); closeM('mchro'); openSettings(); return; }
+
   const type=g('chro-type').value;
   g('chro-pre').style.display='none';
   g('chro-res').style.display='';
@@ -1137,7 +1145,7 @@ window.runChro = async () => {
     msgs=sn.docs.map(d=>d.data()).filter(d=>d.text&&d.type!=='system').map(d=>`[${d.authorName||'אנונימי'}]: ${d.text}`);
   } catch(e){}
 
-  if(!msgs.length){g('chro-out').textContent='אין הודעות בערוץ זה עדיין.';g('chro-foot').style.display='flex';return;}
+  if(!msgs.length){ g('chro-out').textContent='אין הודעות בערוץ זה עדיין.'; g('chro-foot').style.display='flex'; return; }
 
   const prompts={
     story:'אתה הכרוניקן של קבוצת משחק תפקידים. קרא את תמלול השיחה הבאה וכתוב סיכום עלילתי בעברית בסגנון ספרותי מרהיב, בגוף שלישי, כאילו אתה מספר את הסיפור לדורות הבאים. השתמש בתיאורים עשירים ובשפה גבוהה.',
@@ -1147,28 +1155,29 @@ window.runChro = async () => {
   };
 
   try {
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':key,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true',
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${key}`,
       },
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        messages:[{role:'user',content:`${prompts[type]}\n\n--- תמלול השיחה (ערוץ: ${CHS[curCh].name}) ---\n${msgs.join('\n')}\n\nכתוב את הכרוניקה:`}]
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: 1024,
+        messages: [
+          { role: 'system', content: prompts[type] },
+          { role: 'user',   content: `--- תמלול השיחה (ערוץ: ${CHS[curCh].name}) ---\n${msgs.join('\n')}\n\nכתוב את הכרוניקה:` }
+        ],
       })
     });
-    const data=await res.json();
-    if(data.error)throw new Error(data.error.message);
-    chroText=data.content?.[0]?.text||'לא ניתן היה לייצר תוצאה';
-    g('chro-out').textContent=chroText;
-    g('chro-foot').style.display='flex';
+    const data = await res.json();
+    if(data.error) throw new Error(data.error.message);
+    chroText = data.choices?.[0]?.message?.content || 'לא ניתן היה לייצר תוצאה';
+    g('chro-out').textContent = chroText;
+    g('chro-foot').style.display = 'flex';
   } catch(e){
-    g('chro-out').textContent=`שגיאה: ${e.message}`;
-    g('chro-foot').style.display='flex';
+    g('chro-out').textContent = `שגיאה: ${e.message}`;
+    g('chro-foot').style.display = 'flex';
   }
 };
 
@@ -1220,27 +1229,37 @@ function showVD(item){
 }
 
 /* ── Settings ── */
-window.openSettings = () => {
-  g('akey').value=localStorage.getItem('akey')||'';
-  g('stname').value=cu?.displayName||'';
-  g('strole').value=role;
+window.openSettings = async () => {
+  g('stname').value = cu?.displayName||'';
+  // Load fresh key from Firestore
+  try {
+    const s = await getDoc(doc(db,'users',cu.uid));
+    if(s.exists()&&s.data().groqKey) g('akey').value = s.data().groqKey;
+  } catch(e){}
   openM('mset');
 };
 
 window.saveSettings = async () => {
-  const key=g('akey').value.trim();
-  const name=g('stname').value.trim();
-  if(key) localStorage.setItem('akey',key);
-  if(cu&&name){
-    try{
+  const key  = g('akey').value.trim();
+  const name = g('stname').value.trim();
+  if(!cu) return;
+  try {
+    const upd = {};
+    if(name) upd.name = name;
+    if(key)  upd.groqKey = key;
+    if(Object.keys(upd).length){
+      await setDoc(doc(db,'users',cu.uid), upd, {merge:true});
+    }
+    if(name) {
       await updateProfile(cu,{displayName:name});
-      await setDoc(doc(db,'users',cu.uid),{name},{merge:true});
-      g('huname').textContent=name;
-      g('ome').textContent=name;
-    }catch(e){}
+      g('huname').textContent = name;
+      g('ome').textContent    = name;
+    }
+    closeM('mset');
+    toast('הגדרות נשמרו בחשבון ✓');
+  } catch(e){
+    toast('שגיאה בשמירה: '+e.message);
   }
-  closeM('mset');
-  toast('הגדרות נשמרו ✓');
 };
 
 /* ── Modal helpers ── */
